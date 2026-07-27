@@ -61,9 +61,9 @@
 
                     <div class="mt-6 flex justify-between items-center border-t pt-4">
                         <p class="text-lg font-semibold">Total: ₱{{ number_format($total, 2) }}</p>
-                        <button disabled class="bg-accent-500 text-gray-900 font-semibold px-6 py-2 rounded-md opacity-50 cursor-not-allowed">
-                            Checkout (coming soon)
-                        </button>
+                        <a href="{{ route('checkout') }}" class="bg-accent-500 hover:bg-accent-600 text-gray-900 font-semibold px-6 py-2 rounded-md">
+    Checkout
+</a>
                     </div>
                 @endif
             </div>
