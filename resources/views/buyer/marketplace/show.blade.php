@@ -95,11 +95,12 @@
         <input type="number" name="quantity" value="{{ $product->minimum_order_quantity ?? 1 }}" min="0.01" step="0.01"
             class="w-24 border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
     </div>
-    <button type="submit" class="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-4 py-2 rounded-md">
-        Add to Cart
-    </button>
-    <button type="button" disabled class="flex-1 border border-primary-600 text-primary-600 font-semibold px-4 py-2 rounded-md opacity-50 cursor-not-allowed">
-        Chat with Farmer (coming soon)
-    </button>
+    <button type="submit" class="flex-1 bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md transition">
+    Add to Cart
+</button>
+    <a href="{{ route('messages.show', $product->farmer->user_id) }}"
+   class="flex-1 text-center border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold px-4 py-2 rounded-md">
+    Chat with Farmer
+</a>
 </form>
 </x-app-layout>

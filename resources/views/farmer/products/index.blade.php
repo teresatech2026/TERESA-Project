@@ -4,10 +4,10 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('My Products') }}
             </h2>
-            <a href="{{ route('farmer.products.create') }}"
-               class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-md text-sm">
-                + Add Product
-            </a>
+            <<a href="{{ route('farmer.products.create') }}"
+            class="bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md text-sm transition">
+            + Add Product
+</a>
         </div>
     </x-slot>
 

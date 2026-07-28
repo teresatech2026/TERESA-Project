@@ -13,13 +13,17 @@
                     <br><br>
                     <div class="flex gap-3">
                         <a href="{{ route('farmer.products.index') }}"
-                           class="inline-block bg-primary-600 hover:bg-primary-700 text-white font-semibold px-4 py-2 rounded-md text-sm">
-                            My Products
-                        </a>
+                        class="inline-block bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md text-sm transition">
+                        My Products
+</a>
                         <a href="{{ route('farmer.orders.index') }}"
                            class="inline-block border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold px-4 py-2 rounded-md text-sm">
                             Incoming Orders
                         </a>
+                        <a href="{{ route('messages.index') }}"
+                        class="inline-block border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold px-4 py-2 rounded-md text-sm">
+                        Messages
+</a>
                     </div>
                 </div>
             </div>

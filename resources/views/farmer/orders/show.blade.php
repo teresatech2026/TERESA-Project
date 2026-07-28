@@ -89,9 +89,10 @@
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="status" value="{{ $value }}">
-                                    <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-4 py-2 rounded-md text-sm">
-                                        {{ $label }}
+                                    <button type="submit" class="bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md text-sm transition">
+                                    {{ $label }}
                                     </button>
+                                </button>
                                 </form>
                             @endforeach
 
