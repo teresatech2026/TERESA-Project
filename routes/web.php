@@ -35,6 +35,18 @@ Route::get('/farmer/products/{product}', [\App\Http\Controllers\Farmer\ProductCo
     ->middleware(['auth', 'role:farmer'])
     ->name('farmer.products.show');
 
+Route::get('/farmer/orders', [\App\Http\Controllers\Farmer\OrderController::class, 'index'])
+    ->middleware(['auth', 'role:farmer'])
+    ->name('farmer.orders.index');
+
+Route::get('/farmer/orders/{order}', [\App\Http\Controllers\Farmer\OrderController::class, 'show'])
+    ->middleware(['auth', 'role:farmer'])
+    ->name('farmer.orders.show');
+
+Route::patch('/farmer/orders/{order}/status', [\App\Http\Controllers\Farmer\OrderController::class, 'updateStatus'])
+    ->middleware(['auth', 'role:farmer'])
+    ->name('farmer.orders.updateStatus');
+
 Route::get('/buyer/dashboard', function () {
     return view('buyer.dashboard');
 })->middleware(['auth', 'role:buyer'])->name('buyer.dashboard');
