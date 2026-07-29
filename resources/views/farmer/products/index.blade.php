@@ -4,10 +4,10 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('My Products') }}
             </h2>
-            <<a href="{{ route('farmer.products.create') }}"
-            class="bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md text-sm transition">
-            + Add Product
-</a>
+            <a href="{{ route('farmer.products.create') }}"
+               class="bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md text-sm transition">
+                + Add Product
+            </a>
         </div>
     </x-slot>
 
@@ -26,7 +26,7 @@
                 @else
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         @foreach ($products as $product)
-                            <a href="{{ route('farmer.products.show', $product) }}" class="block border rounded-lg p-4 hover:shadow-md transition">
+                            <a href="{{ route('farmer.products.show', $product) }}" class="block border border-primary-600 rounded-lg p-4 hover:shadow-md transition">
                                 @if ($product->primaryImage)
                                     <img src="{{ Storage::url($product->primaryImage->image_path) }}"
                                          class="w-full h-40 object-cover rounded mb-3">

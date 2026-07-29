@@ -13,7 +13,7 @@
                 @else
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         @foreach ($products as $product)
-                            <a href="{{ route('marketplace.show', $product) }}" class="block border rounded-lg p-4 hover:shadow-md transition">
+                            <a href="{{ route('marketplace.show', $product) }}" class="block border border-primary-600 rounded-lg p-4 hover:shadow-md transition">
                                 @if ($product->primaryImage)
                                     <img src="{{ Storage::url($product->primaryImage->image_path) }}"
                                          class="w-full h-32 object-cover rounded mb-3">
