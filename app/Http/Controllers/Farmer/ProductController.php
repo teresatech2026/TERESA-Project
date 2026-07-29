@@ -66,12 +66,12 @@ class ProductController extends Controller
     /**
      * Show full details of a single product.
      */
-    public function show(Product $product)
-    {
-        abort_unless($product->farmer_id === auth()->user()->farmer->id, 403);
+   public function show(Product $product)
+{
+    abort_unless($product->farmer_id === auth()->user()->farmer->id, 403);
 
-        $product->load('images');
+    $product->load('images', 'farmer.reviews.buyer');
 
-        return view('farmer.products.show', compact('product'));
-    }
+    return view('farmer.products.show', compact('product'));
+}
 }

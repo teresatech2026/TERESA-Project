@@ -81,6 +81,30 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="border-t mt-8 pt-6">
+                    <h3 class="font-semibold text-sm text-gray-500 uppercase mb-4">
+                        Reviews ({{ $product->farmer->reviews->count() }})
+                    </h3>
+
+                    @forelse ($product->farmer->reviews as $review)
+                        <div class="border-b pb-4 mb-4 last:border-b-0">
+                            <div class="flex justify-between items-start">
+                                <p class="font-medium">{{ $review->buyer->full_name }}</p>
+                                <div class="flex gap-0.5">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <span class="{{ $i <= $review->rating ? 'text-accent-500' : 'text-gray-300' }}">★</span>
+                                    @endfor
+                                </div>
+                            </div>
+                            @if ($review->comment)
+                                <p class="text-sm text-gray-600 mt-1">{{ $review->comment }}</p>
+                            @endif
+                        </div>
+                    @empty
+                        <p class="text-gray-400 text-sm">No reviews yet.</p>
+                    @endforelse
+                </div>
             </div>
         </div>
     </div>
