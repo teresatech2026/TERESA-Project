@@ -103,7 +103,7 @@ class OrderController extends Controller
     {
         abort_unless($order->buyer_id === auth()->user()->buyer->id, 403);
 
-        $order->load(['items', 'farmer']);
+        $order->load(['items', 'farmer', 'review']);
 
         return view('buyer.orders.show', compact('order'));
     }

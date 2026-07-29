@@ -20,6 +20,10 @@
                            class="inline-block border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold px-4 py-2 rounded-md text-sm">
                             My Cart
                         </a>
+                        <a href="{{ route('orders.index') }}"
+                        class="inline-block border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold px-4 py-2 rounded-md text-sm">
+                        My Orders
+                        </a>
                         <a href="{{ route('messages.index') }}"
                            class="inline-block border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold px-4 py-2 rounded-md text-sm">
                             Messages

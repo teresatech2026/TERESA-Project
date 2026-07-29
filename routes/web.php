@@ -91,6 +91,10 @@ Route::get('/orders/{order}', [\App\Http\Controllers\Buyer\OrderController::clas
     ->middleware(['auth', 'role:buyer'])
     ->name('orders.show');
 
+Route::post('/orders/{order}/review', [\App\Http\Controllers\Buyer\ReviewController::class, 'store'])
+    ->middleware(['auth', 'role:buyer'])
+    ->name('orders.review');
+
 Route::get('/admin/dashboard', function () {
     return view('admin.dashboard');
 })->middleware(['auth', 'role:admin'])->name('admin.dashboard');

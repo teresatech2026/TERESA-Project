@@ -56,6 +56,49 @@
                 @endif
 
                 <p class="text-xs text-gray-400 mt-6">Order placed on {{ $order->created_at->format('F d, Y \a\t g:i A') }}</p>
+
+                @if ($order->status === 'completed')
+                    <div class="border-t mt-6 pt-6">
+                        @if ($order->review)
+                            <h3 class="font-semibold text-sm text-gray-500 uppercase mb-2">Your Review</h3>
+                            <div class="flex items-center gap-1 mb-2">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <span class="{{ $i <= $order->review->rating ? 'text-accent-500' : 'text-gray-300' }}">★</span>
+                                @endfor
+                            </div>
+                            @if ($order->review->comment)
+                                <p class="text-sm text-gray-700">{{ $order->review->comment }}</p>
+                            @endif
+                        @else
+                            <h3 class="font-semibold text-sm text-gray-500 uppercase mb-3">Leave a Review</h3>
+                            <form method="POST" action="{{ route('orders.review', $order) }}" x-data="{ rating: 0, hovered: 0 }">
+                                @csrf
+                                <input type="hidden" name="rating" x-model="rating">
+
+                                <div class="flex gap-1 mb-3 text-2xl">
+                                    <template x-for="star in [1,2,3,4,5]" :key="star">
+                                        <span @click="rating = star"
+                                              @mouseenter="hovered = star"
+                                              @mouseleave="hovered = 0"
+                                              class="cursor-pointer"
+                                              :class="(hovered || rating) >= star ? 'text-accent-500' : 'text-gray-300'">★</span>
+                                    </template>
+                                </div>
+
+                                <textarea name="comment" rows="3" placeholder="Share your experience (optional)"
+                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm mb-3"></textarea>
+
+                                @error('rating')
+                                    <p class="text-red-600 text-sm mb-2">{{ $message }}</p>
+                                @enderror
+
+                                <button type="submit" class="bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md text-sm transition">
+                                    Submit Review
+                                </button>
+                            </form>
+                        @endif
+                    </div>
+                @endif
             </div>
         </div>
     </div>
