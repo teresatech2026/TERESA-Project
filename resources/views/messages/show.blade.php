@@ -1,18 +1,30 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ $partner->name }}
-            </h2>
+    <div class="flex justify-between items-center">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ $partner->name }}
+        </h2>
+        <div class="flex items-center gap-4">
+            <a href="{{ route('reports.create', $partner) }}" class="text-sm text-red-500 hover:underline">
+                Report User
+            </a>
             <a href="{{ route('messages.index') }}" class="text-sm text-primary-600 hover:underline">
                 &larr; Back to Messages
             </a>
         </div>
-    </x-slot>
+    </div>
+</x-slot>
 
     <div class="py-12">
-        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg flex flex-col h-[32rem]">
+    <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
+
+        @if (session('success'))
+            <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg flex flex-col h-[32rem]">
 
                 <!-- Message thread -->
                 <div class="flex-1 overflow-y-auto p-4 space-y-3">

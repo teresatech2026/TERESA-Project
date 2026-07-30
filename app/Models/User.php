@@ -12,18 +12,26 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $fillable = [
+   protected $fillable = [
         'name',
         'username',
         'email',
         'password',
         'role',
+        'is_active',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
+protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
+    }
 
     public function farmer() { return $this->hasOne(Farmer::class); }
     public function buyer()  { return $this->hasOne(Buyer::class); }

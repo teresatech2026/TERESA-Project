@@ -9,9 +9,16 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    Welcome, {{ auth()->user()->name }}! This is your Admin dashboard.
+                    Welcome, {{ auth()->user()->name }}!
                     <br><br>
-                    Coming soon: user management, advisories, and reports.
+                    <a href="{{ route('admin.users.index') }}"
+                       class="inline-block bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md text-sm transition">
+                        User Management
+                    <a href="{{ route('admin.reports.index') }}"
+                        class="inline-block border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold px-4 py-2 rounded-md text-sm ml-3">
+                        User Reports
+                    </a>
+                    </a>
                 </div>
             </div>
         </div>

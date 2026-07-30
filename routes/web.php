@@ -99,10 +99,35 @@ Route::get('/admin/dashboard', function () {
     return view('admin.dashboard');
 })->middleware(['auth', 'role:admin'])->name('admin.dashboard');
 
+Route::get('/admin/users', [\App\Http\Controllers\Admin\UserManagementController::class, 'index'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.users.index');
+
+Route::get('/admin/users/{user}', [\App\Http\Controllers\Admin\UserManagementController::class, 'show'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.users.show');
+
+Route::patch('/admin/users/{user}/toggle-active', [\App\Http\Controllers\Admin\UserManagementController::class, 'toggleActive'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.users.toggleActive');
+
+Route::get('/admin/reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.reports.index');
+
+Route::patch('/admin/reports/{report}/status', [\App\Http\Controllers\Admin\ReportController::class, 'updateStatus'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.reports.updateStatus');
+
 Route::middleware(['auth', 'role:farmer,buyer'])->group(function () {
     Route::get('/messages', [\App\Http\Controllers\MessageController::class, 'index'])->name('messages.index');
     Route::get('/messages/{user}', [\App\Http\Controllers\MessageController::class, 'show'])->name('messages.show');
     Route::post('/messages/{user}', [\App\Http\Controllers\MessageController::class, 'store'])->name('messages.store');
+});
+
+Route::middleware(['auth', 'role:farmer,buyer'])->group(function () {
+    Route::get('/reports/{user}/create', [\App\Http\Controllers\ReportController::class, 'create'])->name('reports.create');
+    Route::post('/reports/{user}', [\App\Http\Controllers\ReportController::class, 'store'])->name('reports.store');
 });
 
 Route::middleware('auth')->group(function () {
