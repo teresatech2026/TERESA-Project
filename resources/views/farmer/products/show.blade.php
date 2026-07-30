@@ -84,10 +84,10 @@
 
                 <div class="border-t mt-8 pt-6">
                     <h3 class="font-semibold text-sm text-gray-500 uppercase mb-4">
-                        Reviews ({{ $product->farmer->reviews->count() }})
-                    </h3>
+    Reviews ({{ $reviews->count() }})
+</h3>
 
-                    @forelse ($product->farmer->reviews as $review)
+@forelse ($reviews as $review)
                         <div class="border-b pb-4 mb-4 last:border-b-0">
                             <div class="flex justify-between items-start">
                                 <p class="font-medium">{{ $review->buyer->full_name }}</p>

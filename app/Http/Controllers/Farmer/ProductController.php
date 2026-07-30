@@ -70,8 +70,14 @@ class ProductController extends Controller
 {
     abort_unless($product->farmer_id === auth()->user()->farmer->id, 403);
 
-    $product->load('images', 'farmer.reviews.buyer');
+    $product->load('images');
 
-    return view('farmer.products.show', compact('product'));
+    $reviews = $product->farmer->reviews()
+        ->whereHas('order.items', fn ($q) => $q->where('product_id', $product->id))
+        ->with('buyer')
+        ->latest()
+        ->get();
+
+    return view('farmer.products.show', compact('product', 'reviews'));
 }
 }
