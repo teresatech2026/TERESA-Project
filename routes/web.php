@@ -67,6 +67,10 @@ Route::post('/cart/{product}', [\App\Http\Controllers\Buyer\CartController::clas
     ->middleware(['auth', 'role:buyer'])
     ->name('cart.store');
 
+Route::post('/buy-now/{product}', [\App\Http\Controllers\Buyer\CartController::class, 'buyNow'])
+    ->middleware(['auth', 'role:buyer'])
+    ->name('cart.buyNow');
+
 Route::patch('/cart/item/{cartItem}', [\App\Http\Controllers\Buyer\CartController::class, 'update'])
     ->middleware(['auth', 'role:buyer'])
     ->name('cart.update');

@@ -88,19 +88,38 @@
                         </div>
 
                         <!-- Actions -->
-<form method="POST" action="{{ route('cart.store', $product) }}" class="flex gap-3 items-end">
-    @csrf
-    <div>
+<div x-data="{ quantity: {{ $product->minimum_order_quantity ?? 1 }}, price: {{ $product->selling_price }} }">
+    <div class="mb-3">
         <label class="block text-xs text-gray-500 mb-1">Quantity ({{ $product->unit_of_measurement }})</label>
-        <input type="number" name="quantity" value="{{ $product->minimum_order_quantity ?? 1 }}" min="0.01" step="0.01"
+        <input type="number" x-model.number="quantity" min="0.01" step="0.01"
             class="w-24 border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
+        <p class="text-sm text-gray-600 mt-1">
+            Total: <span class="font-semibold text-gray-900" x-text="'₱' + (quantity * price).toFixed(2)"></span>
+        </p>
     </div>
-    <button type="submit" class="flex-1 bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md transition">
-    Add to Cart
-</button>
-    <a href="{{ route('messages.show', $product->farmer->user_id) }}"
-   class="flex-1 text-center border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold px-4 py-2 rounded-md">
-    Chat with Farmer
-</a>
+
+    <div class="flex gap-3">
+        <form method="POST" action="{{ route('cart.buyNow', $product) }}" class="flex-1">
+            @csrf
+            <input type="hidden" name="quantity" :value="quantity">
+            <button type="submit" class="w-full bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md transition">
+                Buy Now
+            </button>
+        </form>
+
+        <form method="POST" action="{{ route('cart.store', $product) }}" class="flex-1">
+            @csrf
+            <input type="hidden" name="quantity" :value="quantity">
+            <button type="submit" class="w-full border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold px-4 py-2 rounded-md transition">
+                Add to Cart
+            </button>
+        </form>
+
+        <a href="{{ route('messages.show', $product->farmer->user_id) }}"
+           class="flex-1 text-center border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold px-4 py-2 rounded-md flex items-center justify-center">
+            Chat with Farmer
+        </a>
+    </div>
+</div>
 </form>
 </x-app-layout>
