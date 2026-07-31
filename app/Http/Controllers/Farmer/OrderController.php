@@ -37,20 +37,30 @@ class OrderController extends Controller
      * Update the status of an order (Farmer moves it through the pipeline).
      */
     public function updateStatus(Request $request, Order $order)
-    {
-        abort_unless($order->farmer_id === auth()->user()->farmer->id, 403);
+{
+    abort_unless($order->farmer_id === auth()->user()->farmer->id, 403);
 
-        $request->validate([
-            'status' => 'required|in:confirmed,preparing,ready_for_pickup,out_for_delivery,completed,cancelled',
-        ]);
+    $request->validate([
+        'status' => 'required|in:confirmed,preparing,ready_for_pickup,out_for_delivery,completed,cancelled',
+    ]);
 
-        $order->update(['status' => $request->status]);
+    $order->update(['status' => $request->status]);
 
-        // If the order is now completed, bump the farmer's completed_orders count
-        if ($request->status === 'completed') {
-            $order->farmer->increment('completed_orders');
-        }
-
-        return back()->with('success', 'Order status updated.');
+    // If the order is now completed, bump the farmer's completed_orders count
+    if ($request->status === 'completed') {
+        $order->farmer->increment('completed_orders');
     }
+
+    $statusLabel = ucwords(str_replace('_', ' ', $request->status));
+
+    \App\Models\Notification::notify(
+        $order->buyer->user_id,
+        'order_update',
+        'Order Status Updated',
+        "Your order #{$order->id} is now: {$statusLabel}.",
+        route('orders.show', $order)
+    );
+
+    return back()->with('success', 'Order status updated.');
+}
 }

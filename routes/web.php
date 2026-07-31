@@ -136,4 +136,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/{notification}/redirect', [\App\Http\Controllers\NotificationController::class, 'redirect'])->name('notifications.redirect');
+});
+
 require __DIR__.'/auth.php';

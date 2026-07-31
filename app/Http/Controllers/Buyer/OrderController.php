@@ -61,6 +61,14 @@ class OrderController extends Controller
                     'total_amount' => $orderTotal,
                 ]);
 
+                \App\Models\Notification::notify(
+                    $order->farmer->user_id,
+                    'new_order',
+                    'New Order Received',
+                    "You have a new order (#{$order->id}) from {$buyer->full_name}.",
+                    route('farmer.orders.show', $order)
+                );
+
                 foreach ($items as $item) {
                     OrderItem::create([
                         'order_id' => $order->id,
@@ -103,7 +111,7 @@ class OrderController extends Controller
     {
         abort_unless($order->buyer_id === auth()->user()->buyer->id, 403);
 
-        $order->load(['items', 'farmer', 'review']);
+        $order->load(['items', 'farmer']);
 
         return view('buyer.orders.show', compact('order'));
     }

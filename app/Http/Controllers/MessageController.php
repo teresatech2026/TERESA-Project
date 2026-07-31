@@ -82,24 +82,32 @@ class MessageController extends Controller
      * Send a new message to a specific person.
      */
     public function store(Request $request, User $user)
-    {
-        abort_unless(
-            (auth()->user()->role === 'farmer' && $user->role === 'buyer') ||
-            (auth()->user()->role === 'buyer' && $user->role === 'farmer'),
-            403
-        );
+{
+    abort_unless(
+        (auth()->user()->role === 'farmer' && $user->role === 'buyer') ||
+        (auth()->user()->role === 'buyer' && $user->role === 'farmer'),
+        403
+    );
 
-        $request->validate([
-            'message_text' => 'required|string|max:2000',
-        ]);
+    $request->validate([
+        'message_text' => 'required|string|max:2000',
+    ]);
 
-        Message::create([
-            'sender_id' => auth()->id(),
-            'receiver_id' => $user->id,
-            'related_product_id' => $request->input('related_product_id'),
-            'message_text' => $request->message_text,
-        ]);
+    Message::create([
+        'sender_id' => auth()->id(),
+        'receiver_id' => $user->id,
+        'related_product_id' => $request->input('related_product_id'),
+        'message_text' => $request->message_text,
+    ]);
 
-        return back();
-    }
+    \App\Models\Notification::notify(
+        $user->id,
+        'new_message',
+        'New Message from ' . auth()->user()->name,
+        \Illuminate\Support\Str::limit($request->message_text, 100),
+        route('messages.show', auth()->id())
+    );
+
+    return back();
+}
 }

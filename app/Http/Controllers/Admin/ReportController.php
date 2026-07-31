@@ -26,14 +26,24 @@ class ReportController extends Controller
     /**
      * Update a report's status after Admin review.
      */
-    public function updateStatus(Request $request, Report $report)
-    {
-        $request->validate([
-            'status' => 'required|in:pending,reviewed,dismissed',
-        ]);
+   public function updateStatus(Request $request, Report $report)
+{
+    $request->validate([
+        'status' => 'required|in:pending,reviewed,dismissed',
+    ]);
 
-        $report->update(['status' => $request->status]);
+    $report->update(['status' => $request->status]);
 
-        return back()->with('success', 'Report status updated.');
+    if (in_array($request->status, ['reviewed', 'dismissed'])) {
+        \App\Models\Notification::notify(
+            $report->reporter_id,
+            'report_update',
+            'Your Report Has Been ' . ucfirst($request->status),
+            "Your report regarding {$report->reportedUser->name} has been {$request->status} by our team.",
+            null
+        );
     }
+
+    return back()->with('success', 'Report status updated.');
+}
 }

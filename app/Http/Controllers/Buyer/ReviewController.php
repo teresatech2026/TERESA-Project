@@ -33,6 +33,14 @@ class ReviewController extends Controller
             'comment' => $request->comment,
         ]);
 
+        \App\Models\Notification::notify(
+    $order->farmer->user_id,
+    'new_review',
+    'New Review Received',
+    "{$buyer->full_name} left you a {$request->rating}-star review.",
+    route('farmer.products.show', $order->items->first()->product_id)
+);
+
         // Recalculate the farmer's overall rating and review count
         $farmer = $order->farmer;
         $farmer->update([

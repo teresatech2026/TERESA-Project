@@ -36,6 +36,7 @@ protected function casts(): array
     public function farmer() { return $this->hasOne(Farmer::class); }
     public function buyer()  { return $this->hasOne(Buyer::class); }
     public function admin()  { return $this->hasOne(Admin::class); }
+    public function notifications() { return $this->hasMany(Notification::class); }
 
     public function isFarmer(): bool { return $this->role === 'farmer'; }
     public function isBuyer(): bool  { return $this->role === 'buyer'; }
