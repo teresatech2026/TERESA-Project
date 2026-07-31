@@ -94,11 +94,12 @@ class MessageController extends Controller
     ]);
 
     Message::create([
-        'sender_id' => auth()->id(),
-        'receiver_id' => $user->id,
-        'related_product_id' => $request->input('related_product_id'),
-        'message_text' => $request->message_text,
-    ]);
+    'sender_id' => auth()->id(),
+    'receiver_id' => $user->id,
+    'related_product_id' => $request->input('related_product_id'),
+    'message_text' => $request->message_text,
+    'created_at' => now(),
+]);
 
     \App\Models\Notification::notify(
         $user->id,

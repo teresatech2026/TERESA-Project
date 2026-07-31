@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Message extends Model
 {
     public $timestamps = false;
-    protected $fillable = ['sender_id', 'receiver_id', 'related_product_id', 'message_text', 'is_read'];
+    protected $fillable = ['sender_id', 'receiver_id', 'related_product_id', 'message_text', 'is_read', 'created_at'];
     protected $casts = ['created_at' => 'datetime'];
 
     public function sender()   { return $this->belongsTo(User::class, 'sender_id'); }
