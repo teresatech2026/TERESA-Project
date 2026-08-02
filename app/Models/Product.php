@@ -20,6 +20,7 @@ class Product extends Model
     public function farmer()   { return $this->belongsTo(Farmer::class); }
     public function images()   { return $this->hasMany(ProductImage::class); }
     public function primaryImage() { return $this->hasOne(ProductImage::class)->where('is_primary', true); }
+    public function orderItems() { return $this->hasMany(OrderItem::class); }
 
     // Freshness Status is computed, not stored.
     public function getFreshnessStatusAttribute(): string

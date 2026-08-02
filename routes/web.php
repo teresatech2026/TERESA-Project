@@ -123,6 +123,22 @@ Route::patch('/admin/reports/{report}/status', [\App\Http\Controllers\Admin\Repo
     ->middleware(['auth', 'role:admin'])
     ->name('admin.reports.updateStatus');
 
+Route::get('/admin/advisories/create', [\App\Http\Controllers\Admin\AdvisoryController::class, 'create'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.advisories.create');
+
+Route::post('/admin/advisories', [\App\Http\Controllers\Admin\AdvisoryController::class, 'store'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.advisories.store');
+
+Route::delete('/admin/advisories/{advisory}', [\App\Http\Controllers\Admin\AdvisoryController::class, 'destroy'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.advisories.destroy');
+
+Route::get('/market-analytics', [\App\Http\Controllers\MarketAnalyticsController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('market-analytics.index');
+
 Route::middleware(['auth', 'role:farmer,buyer'])->group(function () {
     Route::get('/messages', [\App\Http\Controllers\MessageController::class, 'index'])->name('messages.index');
     Route::get('/messages/{user}', [\App\Http\Controllers\MessageController::class, 'show'])->name('messages.show');
