@@ -11,16 +11,84 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
-            </div>
+<div class="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex">
+    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+        {{ __('Home') }}
+    </x-nav-link>
 
-            <!-- Notifications Bell -->
-<div class="hidden sm:flex sm:items-center">
-    <a href="{{ route('notifications.index') }}" class="relative inline-flex items-center p-2 text-gray-500 hover:text-gray-700">
+    @if (auth()->user()->role === 'farmer')
+        <x-nav-link :href="route('farmer.products.index')" :active="request()->routeIs('farmer.products.*')">
+            {{ __('My Products') }}
+        </x-nav-link>
+        <x-nav-link :href="route('farmer.orders.index')" :active="request()->routeIs('farmer.orders.*')">
+            {{ __('Orders') }}
+        </x-nav-link>
+    @endif
+
+    @if (auth()->user()->role === 'buyer')
+        <x-nav-link :href="route('marketplace.index')" :active="request()->routeIs('marketplace.*')">
+            {{ __('Marketplace') }}
+        </x-nav-link>
+        <x-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.*')">
+            {{ __('Cart') }}
+        </x-nav-link>
+        <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
+            {{ __('My Orders') }}
+        </x-nav-link>
+    @endif
+
+    @if (auth()->user()->role === 'admin')
+        <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+            {{ __('Users') }}
+        </x-nav-link>
+        <x-nav-link :href="route('admin.reports.index')" :active="request()->routeIs('admin.reports.*')">
+            {{ __('Reports') }}
+        </x-nav-link>
+    @endif
+
+    @if (in_array(auth()->user()->role, ['farmer', 'buyer']))
+        <x-nav-link :href="route('messages.index')" :active="request()->routeIs('messages.*')">
+            {{ __('Messages') }}
+        </x-nav-link>
+    @endif
+
+    <x-nav-link :href="route('market-analytics.index')" :active="request()->routeIs('market-analytics.*')">
+        {{ __('Market Analytics') }}
+    </x-nav-link>
+</div>
+
+            <!-- Icon Actions: Messages, Cart, Notifications -->
+<div class="hidden sm:flex sm:items-center sm:gap-1">
+
+    @if (in_array(auth()->user()->role, ['farmer', 'buyer']))
+        <a href="{{ route('messages.index') }}" class="relative inline-flex items-center p-2 text-gray-500 hover:text-primary-600">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            @php $unreadMessages = \App\Models\Message::where('receiver_id', auth()->id())->where('is_read', false)->count(); @endphp
+            @if ($unreadMessages > 0)
+                <span class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-accent-500 rounded-full">
+                    {{ $unreadMessages }}
+                </span>
+            @endif
+        </a>
+    @endif
+
+    @if (auth()->user()->role === 'buyer')
+        <a href="{{ route('cart.index') }}" class="relative inline-flex items-center p-2 text-gray-500 hover:text-primary-600">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            @php $cartCount = auth()->user()->buyer?->cartItems()->count() ?? 0; @endphp
+            @if ($cartCount > 0)
+                <span class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-accent-500 rounded-full">
+                    {{ $cartCount }}
+                </span>
+            @endif
+        </a>
+    @endif
+
+    <a href="{{ route('notifications.index') }}" class="relative inline-flex items-center p-2 text-gray-500 hover:text-primary-600">
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
         </svg>
@@ -80,12 +148,47 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+<div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+    <div class="pt-2 pb-3 space-y-1">
+        <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+            {{ __('Home') }}
+        </x-responsive-nav-link>
+
+        @if (auth()->user()->role === 'farmer')
+            <x-responsive-nav-link :href="route('farmer.products.index')" :active="request()->routeIs('farmer.products.*')">
+                {{ __('My Products') }}
             </x-responsive-nav-link>
-        </div>
+            <x-responsive-nav-link :href="route('farmer.orders.index')" :active="request()->routeIs('farmer.orders.*')">
+                {{ __('Orders') }}
+            </x-responsive-nav-link>
+        @endif
+
+        @if (auth()->user()->role === 'buyer')
+    <x-nav-link :href="route('marketplace.index')" :active="request()->routeIs('marketplace.*')">
+        {{ __('Marketplace') }}
+    </x-nav-link>
+    <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
+        {{ __('My Orders') }}
+    </x-nav-link>
+@endif
+
+        @if (auth()->user()->role === 'admin')
+            <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                {{ __('Users') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.reports.index')" :active="request()->routeIs('admin.reports.*')">
+                {{ __('Reports') }}
+            </x-responsive-nav-link>
+        @endif
+
+        <x-responsive-nav-link :href="route('market-analytics.index')" :active="request()->routeIs('market-analytics.*')">
+            {{ __('Market Analytics') }}
+        </x-responsive-nav-link>
+
+        <x-responsive-nav-link :href="route('notifications.index')" :active="request()->routeIs('notifications.*')">
+            {{ __('Notifications') }}
+        </x-responsive-nav-link>
+    </div>
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">

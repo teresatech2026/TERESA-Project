@@ -9,8 +9,8 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return match (auth()->user()->role) {
-        'farmer' => redirect()->route('farmer.dashboard'),
-        'buyer' => redirect()->route('buyer.dashboard'),
+        'farmer' => redirect()->route('farmer.products.index'),
+        'buyer' => redirect()->route('marketplace.index'),
         'admin' => redirect()->route('admin.dashboard'),
     };
 })->middleware(['auth'])->name('dashboard');
