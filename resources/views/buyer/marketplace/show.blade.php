@@ -17,26 +17,27 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
                     <!-- Images -->
-                    <div>
-                        @if ($product->images->isNotEmpty())
-                            <img src="{{ Storage::url($product->images->firstWhere('is_primary', true)?->image_path ?? $product->images->first()->image_path) }}"
-                                 class="w-full h-80 object-cover rounded-lg mb-3">
+<div x-data="{ activeImage: '{{ $product->images->firstWhere('is_primary', true)?->image_path ?? $product->images->first()?->image_path }}' }">
+    @if ($product->images->isNotEmpty())
+        <img :src="'/storage/' + activeImage"
+             class="w-full h-80 object-cover rounded-lg mb-3">
 
-                            @if ($product->images->count() > 1)
-                                <div class="grid grid-cols-4 gap-2">
-                                    @foreach ($product->images as $image)
-                                        <img src="{{ Storage::url($image->image_path) }}"
-                                             class="w-full h-20 object-cover rounded border">
-                                    @endforeach
-                                </div>
-                            @endif
-                        @else
-                            <div class="w-full h-80 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
-                                No Image
-                            </div>
-                        @endif
-                    </div>
-
+        @if ($product->images->count() > 1)
+            <div class="flex gap-2 overflow-x-auto pb-2">
+                @foreach ($product->images as $image)
+                    <img src="{{ Storage::url($image->image_path) }}"
+                         @click="activeImage = '{{ $image->image_path }}'"
+                         class="w-20 h-20 object-cover rounded border-2 flex-shrink-0 cursor-pointer transition"
+                         :class="activeImage === '{{ $image->image_path }}' ? 'border-primary-600' : 'border-transparent hover:border-gray-300'">
+                @endforeach
+            </div>
+        @endif
+    @else
+        <div class="w-full h-80 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+            No Image
+        </div>
+    @endif
+</div>
                     <!-- Details -->
                     <div>
                         <p class="text-2xl font-bold mb-1">₱{{ number_format($product->selling_price, 2) }} <span class="text-base font-normal text-gray-500">/ {{ $product->unit_of_measurement }}</span></p>
