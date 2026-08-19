@@ -121,6 +121,49 @@
             Chat with Farmer
         </a>
     </div>
+
+    <div class="mt-4 border-t pt-4" x-data="{ showBidForm: false, bidQty: {{ $product->minimum_order_quantity ?? 1 }}, bidPrice: '' }">
+    <button type="button" @click="showBidForm = !showBidForm"
+        class="text-sm text-accent-600 hover:underline font-semibold flex items-center gap-1">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        <span x-text="showBidForm ? 'Cancel offer' : 'Make an Offer'"></span>
+    </button>
+
+    <form x-show="showBidForm" x-cloak method="POST" action="{{ route('bids.store', $product) }}" class="mt-3 border rounded-lg p-4 bg-gray-50">
+        @csrf
+        <p class="text-xs text-gray-500 mb-3">Propose a quantity and price to the farmer. They can accept or decline your offer.</p>
+
+        <div class="grid grid-cols-2 gap-3 mb-3">
+            <div>
+                <label class="block text-xs text-gray-500 mb-1">Quantity ({{ $product->unit_of_measurement }})</label>
+                <input type="number" name="quantity" x-model.number="bidQty" min="0.01" max="{{ $product->available_quantity }}" step="0.01" required
+                    class="w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
+            </div>
+            <div>
+                <label class="block text-xs text-gray-500 mb-1">Your Offer (₱ per {{ $product->unit_of_measurement }})</label>
+                <input type="number" name="offered_price" x-model.number="bidPrice" min="0.01" max="{{ $product->selling_price - 0.01 }}" step="0.01" required
+                    class="w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
+            </div>
+        </div>
+
+        <p class="text-xs text-gray-600 mb-3">
+            Listed price: ₱{{ number_format($product->selling_price, 2) }} ·
+            Your total: <span class="font-semibold" x-text="'₱' + ((bidQty || 0) * (bidPrice || 0)).toFixed(2)"></span>
+        </p>
+
+        <textarea name="message" rows="2" placeholder="Optional message to the farmer..."
+            class="block w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm mb-3"></textarea>
+
+        @error('quantity') <p class="text-red-600 text-xs mb-2">{{ $message }}</p> @enderror
+        @error('offered_price') <p class="text-red-600 text-xs mb-2">{{ $message }}</p> @enderror
+
+        <button type="submit" class="bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md text-sm transition">
+            Send Offer
+        </button>
+    </form>
+</div>
 </div>
 </form>
 </x-app-layout>

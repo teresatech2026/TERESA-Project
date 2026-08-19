@@ -47,6 +47,18 @@ Route::patch('/farmer/orders/{order}/status', [\App\Http\Controllers\Farmer\Orde
     ->middleware(['auth', 'role:farmer'])
     ->name('farmer.orders.updateStatus');
 
+Route::get('/farmer/bids', [\App\Http\Controllers\Farmer\BidController::class, 'index'])
+    ->middleware(['auth', 'role:farmer'])
+    ->name('farmer.bids.index');
+
+Route::patch('/farmer/bids/{bid}/accept', [\App\Http\Controllers\Farmer\BidController::class, 'accept'])
+    ->middleware(['auth', 'role:farmer'])
+    ->name('farmer.bids.accept');
+
+Route::patch('/farmer/bids/{bid}/reject', [\App\Http\Controllers\Farmer\BidController::class, 'reject'])
+    ->middleware(['auth', 'role:farmer'])
+    ->name('farmer.bids.reject');
+
 Route::get('/buyer/dashboard', function () {
     return view('buyer.dashboard');
 })->middleware(['auth', 'role:buyer'])->name('buyer.dashboard');
@@ -78,6 +90,18 @@ Route::patch('/cart/item/{cartItem}', [\App\Http\Controllers\Buyer\CartControlle
 Route::delete('/cart/item/{cartItem}', [\App\Http\Controllers\Buyer\CartController::class, 'destroy'])
     ->middleware(['auth', 'role:buyer'])
     ->name('cart.destroy');
+
+Route::post('/products/{product}/bids', [\App\Http\Controllers\Buyer\BidController::class, 'store'])
+    ->middleware(['auth', 'role:buyer'])
+    ->name('bids.store');
+
+Route::get('/my-offers', [\App\Http\Controllers\Buyer\BidController::class, 'index'])
+    ->middleware(['auth', 'role:buyer'])
+    ->name('bids.index');
+
+Route::patch('/my-offers/{bid}/cancel', [\App\Http\Controllers\Buyer\BidController::class, 'cancel'])
+    ->middleware(['auth', 'role:buyer'])
+    ->name('bids.cancel');
 
 Route::get('/checkout', [\App\Http\Controllers\Buyer\OrderController::class, 'checkout'])
     ->middleware(['auth', 'role:buyer'])

@@ -1,0 +1,73 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('My Offers') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+
+            @if (session('success'))
+                <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <div class="bg-white shadow-sm sm:rounded-lg p-6">
+                @if ($bids->isEmpty())
+                    <p class="text-gray-500">You haven't made any offers yet.</p>
+                @else
+                    <div class="space-y-4">
+                        @foreach ($bids as $bid)
+                            <div class="border rounded-lg p-4 flex gap-4">
+                                @if ($bid->product->primaryImage)
+                                    <img src="{{ Storage::url($bid->product->primaryImage->image_path) }}"
+                                         class="w-16 h-16 object-cover rounded flex-shrink-0">
+                                @else
+                                    <div class="w-16 h-16 bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs flex-shrink-0">
+                                        No Image
+                                    </div>
+                                @endif
+
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <p class="font-semibold">{{ $bid->product->product_name }}</p>
+                                        <span class="inline-block text-xs px-2 py-1 rounded-full
+                                            @switch($bid->status)
+                                                @case('pending') bg-yellow-100 text-yellow-700 @break
+                                                @case('accepted') bg-green-100 text-green-700 @break
+                                                @case('rejected') bg-red-100 text-red-700 @break
+                                                @case('cancelled') bg-gray-100 text-gray-600 @break
+                                            @endswitch">
+                                            {{ ucfirst($bid->status) }}
+                                        </span>
+                                    </div>
+                                    <p class="text-sm text-gray-500">by {{ $bid->product->farmer->full_name }}</p>
+                                    <p class="text-sm mt-1">
+                                        {{ $bid->quantity }} {{ $bid->product->unit_of_measurement }} @ ₱{{ number_format($bid->offered_price, 2) }}
+                                        = <strong>₱{{ number_format($bid->quantity * $bid->offered_price, 2) }}</strong>
+                                    </p>
+
+                                    @if ($bid->status === 'accepted' && $bid->order_id)
+                                        <a href="{{ route('orders.show', $bid->order_id) }}" class="text-xs text-primary-600 hover:underline mt-1 inline-block">
+                                            View Order &rarr;
+                                        </a>
+                                    @endif
+
+                                    @if ($bid->status === 'pending')
+                                        <form method="POST" action="{{ route('bids.cancel', $bid) }}" class="mt-2">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="text-xs text-red-500 hover:underline">Cancel Offer</button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</x-app-layout>

@@ -21,6 +21,7 @@ class Product extends Model
     public function images()   { return $this->hasMany(ProductImage::class); }
     public function primaryImage() { return $this->hasOne(ProductImage::class)->where('is_primary', true); }
     public function orderItems() { return $this->hasMany(OrderItem::class); }
+    public function bids() { return $this->hasMany(Bid::class); }
 
     // Freshness Status is computed, not stored.
     public function getFreshnessStatusAttribute(): string

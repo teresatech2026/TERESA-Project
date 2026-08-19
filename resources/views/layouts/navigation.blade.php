@@ -16,26 +16,29 @@
         {{ __('Home') }}
     </x-nav-link>
 
-    @if (auth()->user()->role === 'farmer')
-        <x-nav-link :href="route('farmer.products.index')" :active="request()->routeIs('farmer.products.*')">
-            {{ __('My Products') }}
-        </x-nav-link>
-        <x-nav-link :href="route('farmer.orders.index')" :active="request()->routeIs('farmer.orders.*')">
-            {{ __('Orders') }}
-        </x-nav-link>
-    @endif
+   @if (auth()->user()->role === 'farmer')
+    <x-nav-link :href="route('farmer.products.index')" :active="request()->routeIs('farmer.products.*')">
+        {{ __('My Products') }}
+    </x-nav-link>
+    <x-nav-link :href="route('farmer.orders.index')" :active="request()->routeIs('farmer.orders.*')">
+        {{ __('Orders') }}
+    </x-nav-link>
+    <x-nav-link :href="route('farmer.bids.index')" :active="request()->routeIs('farmer.bids.*')">
+        {{ __('Offers') }}
+    </x-nav-link>
+@endif
 
     @if (auth()->user()->role === 'buyer')
-        <x-nav-link :href="route('marketplace.index')" :active="request()->routeIs('marketplace.*')">
-            {{ __('Marketplace') }}
-        </x-nav-link>
-        <x-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.*')">
-            {{ __('Cart') }}
-        </x-nav-link>
-        <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
-            {{ __('My Orders') }}
-        </x-nav-link>
-    @endif
+    <x-nav-link :href="route('marketplace.index')" :active="request()->routeIs('marketplace.*')">
+        {{ __('Marketplace') }}
+    </x-nav-link>
+    <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
+        {{ __('My Orders') }}
+    </x-nav-link>
+    <x-nav-link :href="route('bids.index')" :active="request()->routeIs('bids.*')">
+        {{ __('My Offers') }}
+    </x-nav-link>
+@endif
 
     @if (auth()->user()->role === 'admin')
         <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
