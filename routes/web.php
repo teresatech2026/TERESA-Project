@@ -161,4 +161,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifications/{notification}/redirect', [\App\Http\Controllers\NotificationController::class, 'redirect'])->name('notifications.redirect');
 });
 
+Route::get('/auth/google/redirect', [\App\Http\Controllers\Auth\GoogleController::class, 'redirect'])->name('google.redirect');
+Route::get('/auth/google/callback', [\App\Http\Controllers\Auth\GoogleController::class, 'callback'])->name('google.callback');
+Route::get('/auth/google/register', [\App\Http\Controllers\Auth\GoogleController::class, 'showRegisterForm'])->name('google.register');
+Route::post('/auth/google/register', [\App\Http\Controllers\Auth\GoogleController::class, 'completeRegistration'])->name('google.register.store');
+
 require __DIR__.'/auth.php';

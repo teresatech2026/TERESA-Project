@@ -50,6 +50,23 @@
         </div>
     </form>
 
+    <div class="flex items-center my-6">
+        <div class="flex-1 border-t border-gray-300"></div>
+        <span class="px-3 text-xs text-gray-400 uppercase">or</span>
+        <div class="flex-1 border-t border-gray-300"></div>
+    </div>
+
+    <a href="{{ route('google.redirect') }}"
+       class="flex items-center justify-center gap-3 w-full border border-gray-300 rounded-md py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
+        <svg class="h-5 w-5" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.63h6.47a5.53 5.53 0 01-2.4 3.63v3h3.87c2.27-2.09 3.58-5.17 3.58-8.81z"/>
+            <path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.94-2.92l-3.87-3c-1.08.72-2.45 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.95H1.27v3.1A12 12 0 0012 24z"/>
+            <path fill="#FBBC05" d="M5.27 14.28A7.2 7.2 0 014.9 12c0-.79.14-1.56.37-2.28v-3.1H1.27A12 12 0 000 12c0 1.94.46 3.77 1.27 5.38l4-3.1z"/>
+            <path fill="#EA4335" d="M12 4.77c1.77 0 3.35.61 4.6 1.8l3.43-3.43C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.27 6.62l4 3.1C6.22 6.88 8.87 4.77 12 4.77z"/>
+        </svg>
+        Sign in with Google
+    </a>
+
     <script>
     function togglePassword(inputId, eyeId) {
         const input = document.getElementById(inputId);
