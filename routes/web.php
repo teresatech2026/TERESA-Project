@@ -19,6 +19,10 @@ Route::get('/farmer/dashboard', function () {
     return view('farmer.dashboard');
 })->middleware(['auth', 'role:farmer'])->name('farmer.dashboard');
 
+Route::get('/farmer/analytics', [\App\Http\Controllers\Farmer\AnalyticsController::class, 'index'])
+    ->middleware(['auth', 'role:farmer'])
+    ->name('farmer.analytics.index');
+
 Route::get('/farmer/products', [\App\Http\Controllers\Farmer\ProductController::class, 'index'])
     ->middleware(['auth', 'role:farmer'])
     ->name('farmer.products.index');
