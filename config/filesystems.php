@@ -66,7 +66,7 @@ return [
     'driver' => 's3',
     'key' => env('SUPABASE_STORAGE_KEY'),
     'secret' => env('SUPABASE_STORAGE_SECRET'),
-    'region' => 'us-east-1',
+    'region' => 'ap-southeast-1',
     'bucket' => env('SUPABASE_STORAGE_BUCKET', 'teresa-uploads'),
     'url' => env('SUPABASE_STORAGE_URL'),
     'endpoint' => env('SUPABASE_STORAGE_ENDPOINT'),
