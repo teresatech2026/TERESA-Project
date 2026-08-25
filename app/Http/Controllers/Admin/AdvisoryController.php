@@ -34,9 +34,9 @@ class AdvisoryController extends Controller
 ]);
 
         $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('advisory-images', 'public');
-        }
+if ($request->hasFile('image')) {
+    $imagePath = $request->file('image')->store('advisory-images', 'supabase');
+}
 
         Advisory::create([
     'admin_id' => auth()->user()->admin->id,
@@ -56,15 +56,15 @@ class AdvisoryController extends Controller
      * Delete an advisory.
      */
     public function destroy(Advisory $advisory)
-    {
-        abort_unless($advisory->admin_id === auth()->user()->admin->id, 403);
+{
+    abort_unless($advisory->admin_id === auth()->user()->admin->id, 403);
 
-        if ($advisory->image_path) {
-            Storage::disk('public')->delete($advisory->image_path);
-        }
-
-        $advisory->delete();
-
-        return back()->with('success', 'Advisory deleted.');
+    if ($advisory->image_path) {
+        Storage::disk('supabase')->delete($advisory->image_path);
     }
+
+    $advisory->delete();
+
+    return back()->with('success', 'Advisory deleted.');
+}
 }

@@ -24,7 +24,7 @@
                         @foreach ($cartItems as $item)
                             <div class="py-4 flex items-center gap-4">
                                 @if ($item->product->primaryImage)
-                                    <img src="{{ Storage::url($item->product->primaryImage->image_path) }}"
+                                    <img src="{{ Storage::disk('supabase')->url($item->product->primaryImage->image_path) }}"
                                          class="w-20 h-20 object-cover rounded">
                                 @else
                                     <div class="w-20 h-20 bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">

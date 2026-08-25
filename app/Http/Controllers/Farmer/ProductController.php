@@ -47,17 +47,17 @@ class ProductController extends Controller
         $product = auth()->user()->farmer->products()->create($validated);
 
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $image) {
-                $path = $image->store('product-images', 'public');
+    foreach ($request->file('images') as $index => $image) {
+        $path = $image->store('product-images', 'supabase');
 
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image_path' => $path,
-                    'is_primary' => $index === 0,
-                    'sort_order' => $index,
-                ]);
-            }
-        }
+        ProductImage::create([
+            'product_id' => $product->id,
+            'image_path' => $path,
+            'is_primary' => $index === 0,
+            'sort_order' => $index,
+        ]);
+    }
+}
 
         return redirect()->route('farmer.products.index')
             ->with('success', 'Product added successfully!');

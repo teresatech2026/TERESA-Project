@@ -103,7 +103,7 @@
                         @foreach ($advisories as $advisory)
                             <div class="border-b pb-6 last:border-0">
                                 @if ($advisory->image_path)
-                                    <img src="{{ Storage::url($advisory->image_path) }}" class="w-full max-h-64 object-cover rounded-lg mb-3">
+                                    <img src="{{ Storage::disk('supabase')->url($advisory->image_path) }}" class="w-full max-h-64 object-cover rounded-lg mb-3">
                                 @endif
                                 <div class="flex justify-between items-start">
                                     <div>

@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ $product->product_name }}
             </h2>
-            <a href="{{ route('farmer.products.index') }}" class="text-sm text-indigo-600 hover:underline">
+            <a href="{{ route('farmer.products.index') }}" class="text-sm text-primary-600 hover:underline">
                 &larr; Back to My Products
             </a>
         </div>
@@ -19,13 +19,13 @@
                     <!-- Images -->
                     <div>
                         @if ($product->images->isNotEmpty())
-                            <img src="{{ Storage::url($product->images->firstWhere('is_primary', true)?->image_path ?? $product->images->first()->image_path) }}"
+                            <img src="{{ Storage::disk('supabase')->url($product->images->firstWhere('is_primary', true)?->image_path ?? $product->images->first()->image_path) }}"
                                  class="w-full h-80 object-cover rounded-lg mb-3">
 
                             @if ($product->images->count() > 1)
                                 <div class="grid grid-cols-4 gap-2">
                                     @foreach ($product->images as $image)
-                                        <img src="{{ Storage::url($image->image_path) }}"
+                                        <img src="{{ Storage::disk('supabase')->url($image->image_path) }}"
                                              class="w-full h-20 object-cover rounded border">
                                     @endforeach
                                 </div>
@@ -84,10 +84,10 @@
 
                 <div class="border-t mt-8 pt-6">
                     <h3 class="font-semibold text-sm text-gray-500 uppercase mb-4">
-    Reviews ({{ $reviews->count() }})
-</h3>
+                        Reviews ({{ $reviews->count() }})
+                    </h3>
 
-@forelse ($reviews as $review)
+                    @forelse ($reviews as $review)
                         <div class="border-b pb-4 mb-4 last:border-b-0">
                             <div class="flex justify-between items-start">
                                 <p class="font-medium">{{ $review->buyer->full_name }}</p>

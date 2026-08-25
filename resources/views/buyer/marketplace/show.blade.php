@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ $product->product_name }}
             </h2>
-            <a href="{{ route('marketplace.index') }}" class="text-sm text-indigo-600 hover:underline">
+            <a href="{{ route('marketplace.index') }}" class="text-sm text-primary-600 hover:underline">
                 &larr; Back to Marketplace
             </a>
         </div>
@@ -17,27 +17,28 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
                     <!-- Images -->
-<div x-data="{ activeImage: '{{ $product->images->firstWhere('is_primary', true)?->image_path ?? $product->images->first()?->image_path }}' }">
-    @if ($product->images->isNotEmpty())
-        <img :src="'/storage/' + activeImage"
-             class="w-full h-80 object-cover rounded-lg mb-3">
+                    <div x-data="{ activeImage: '{{ $product->images->firstWhere('is_primary', true)?->image_path ?? $product->images->first()?->image_path }}' }">
+                        @if ($product->images->isNotEmpty())
+                            <img :src="'{{ Storage::disk('supabase')->url('') }}' + activeImage"
+                                 class="w-full h-80 object-cover rounded-lg mb-3">
 
-        @if ($product->images->count() > 1)
-            <div class="flex gap-2 overflow-x-auto pb-2">
-                @foreach ($product->images as $image)
-                    <img src="{{ Storage::url($image->image_path) }}"
-                         @click="activeImage = '{{ $image->image_path }}'"
-                         class="w-20 h-20 object-cover rounded border-2 flex-shrink-0 cursor-pointer transition"
-                         :class="activeImage === '{{ $image->image_path }}' ? 'border-primary-600' : 'border-transparent hover:border-gray-300'">
-                @endforeach
-            </div>
-        @endif
-    @else
-        <div class="w-full h-80 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
-            No Image
-        </div>
-    @endif
-</div>
+                            @if ($product->images->count() > 1)
+                                <div class="flex gap-2 overflow-x-auto pb-2">
+                                    @foreach ($product->images as $image)
+                                        <img src="{{ Storage::disk('supabase')->url($image->image_path) }}"
+                                             @click="activeImage = '{{ $image->image_path }}'"
+                                             class="w-20 h-20 object-cover rounded border-2 flex-shrink-0 cursor-pointer transition"
+                                             :class="activeImage === '{{ $image->image_path }}' ? 'border-primary-600' : 'border-transparent hover:border-gray-300'">
+                                    @endforeach
+                                </div>
+                            @endif
+                        @else
+                            <div class="w-full h-80 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+                                No Image
+                            </div>
+                        @endif
+                    </div>
+
                     <!-- Details -->
                     <div>
                         <p class="text-2xl font-bold mb-1">₱{{ number_format($product->selling_price, 2) }} <span class="text-base font-normal text-gray-500">/ {{ $product->unit_of_measurement }}</span></p>
@@ -89,81 +90,85 @@
                         </div>
 
                         <!-- Actions -->
-<div x-data="{ quantity: {{ $product->minimum_order_quantity ?? 1 }}, price: {{ $product->selling_price }} }">
-    <div class="mb-3">
-        <label class="block text-xs text-gray-500 mb-1">Quantity ({{ $product->unit_of_measurement }})</label>
-        <input type="number" x-model.number="quantity" min="0.01" step="0.01"
-            class="w-24 border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
-        <p class="text-sm text-gray-600 mt-1">
-            Total: <span class="font-semibold text-gray-900" x-text="'₱' + (quantity * price).toFixed(2)"></span>
-        </p>
-    </div>
+                        <div x-data="{ quantity: {{ $product->minimum_order_quantity ?? 1 }}, price: {{ $product->selling_price }} }">
+                            <div class="mb-3">
+                                <label class="block text-xs text-gray-500 mb-1">Quantity ({{ $product->unit_of_measurement }})</label>
+                                <input type="number" x-model.number="quantity" min="0.01" step="0.01"
+                                    class="w-24 border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
+                                <p class="text-sm text-gray-600 mt-1">
+                                    Total: <span class="font-semibold text-gray-900" x-text="'₱' + (quantity * price).toFixed(2)"></span>
+                                </p>
+                            </div>
 
-    <div class="flex gap-3">
-        <form method="POST" action="{{ route('cart.buyNow', $product) }}" class="flex-1">
-            @csrf
-            <input type="hidden" name="quantity" :value="quantity">
-            <button type="submit" class="w-full bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md transition">
-                Buy Now
-            </button>
-        </form>
+                            <div class="flex gap-3">
+                                <form method="POST" action="{{ route('cart.buyNow', $product) }}" class="flex-1">
+                                    @csrf
+                                    <input type="hidden" name="quantity" :value="quantity">
+                                    <button type="submit" class="w-full bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md transition">
+                                        Buy Now
+                                    </button>
+                                </form>
 
-        <form method="POST" action="{{ route('cart.store', $product) }}" class="flex-1">
-            @csrf
-            <input type="hidden" name="quantity" :value="quantity">
-            <button type="submit" class="w-full border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold px-4 py-2 rounded-md transition">
-                Add to Cart
-            </button>
-        </form>
+                                <form method="POST" action="{{ route('cart.store', $product) }}" class="flex-1">
+                                    @csrf
+                                    <input type="hidden" name="quantity" :value="quantity">
+                                    <button type="submit" class="w-full border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold px-4 py-2 rounded-md transition">
+                                        Add to Cart
+                                    </button>
+                                </form>
 
-        <a href="{{ route('messages.show', $product->farmer->user_id) }}"
-           class="flex-1 text-center border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold px-4 py-2 rounded-md flex items-center justify-center">
-            Chat with Farmer
-        </a>
-    </div>
+                                <a href="{{ route('messages.show', $product->farmer->user_id) }}"
+                                   class="flex-1 text-center border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold px-4 py-2 rounded-md flex items-center justify-center">
+                                    Chat with Farmer
+                                </a>
+                            </div>
+                        </div>
 
-    <div class="mt-4 border-t pt-4" x-data="{ showBidForm: false, bidQty: {{ $product->minimum_order_quantity ?? 1 }}, bidPrice: '' }">
-    <button type="button" @click="showBidForm = !showBidForm"
-        class="text-sm text-accent-600 hover:underline font-semibold flex items-center gap-1">
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-        </svg>
-        <span x-text="showBidForm ? 'Cancel offer' : 'Make an Offer'"></span>
-    </button>
+                        <div class="mt-4 border-t pt-4" x-data="{ showBidForm: false, bidQty: {{ $product->minimum_order_quantity ?? 1 }}, bidPrice: '' }">
+                            <button type="button" @click="showBidForm = !showBidForm"
+                                class="text-sm text-accent-600 hover:underline font-semibold flex items-center gap-1">
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                                <span x-text="showBidForm ? 'Cancel offer' : 'Make an Offer'"></span>
+                            </button>
 
-    <form x-show="showBidForm" x-cloak method="POST" action="{{ route('bids.store', $product) }}" class="mt-3 border rounded-lg p-4 bg-gray-50">
-        @csrf
-        <p class="text-xs text-gray-500 mb-3">Propose a quantity and price to the farmer. They can accept or decline your offer.</p>
+                            <form x-show="showBidForm" x-cloak method="POST" action="{{ route('bids.store', $product) }}" class="mt-3 border rounded-lg p-4 bg-gray-50">
+                                @csrf
+                                <p class="text-xs text-gray-500 mb-3">Propose a quantity and price to the farmer. They can accept or decline your offer.</p>
 
-        <div class="grid grid-cols-2 gap-3 mb-3">
-            <div>
-                <label class="block text-xs text-gray-500 mb-1">Quantity ({{ $product->unit_of_measurement }})</label>
-                <input type="number" name="quantity" x-model.number="bidQty" min="0.01" max="{{ $product->available_quantity }}" step="0.01" required
-                    class="w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
-            </div>
-            <div>
-                <label class="block text-xs text-gray-500 mb-1">Your Offer (₱ per {{ $product->unit_of_measurement }})</label>
-                <input type="number" name="offered_price" x-model.number="bidPrice" min="0.01" max="{{ $product->selling_price - 0.01 }}" step="0.01" required
-                    class="w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
+                                <div class="grid grid-cols-2 gap-3 mb-3">
+                                    <div>
+                                        <label class="block text-xs text-gray-500 mb-1">Quantity ({{ $product->unit_of_measurement }})</label>
+                                        <input type="number" name="quantity" x-model.number="bidQty" min="0.01" max="{{ $product->available_quantity }}" step="0.01" required
+                                            class="w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-gray-500 mb-1">Your Offer (₱ per {{ $product->unit_of_measurement }})</label>
+                                        <input type="number" name="offered_price" x-model.number="bidPrice" min="0.01" max="{{ $product->selling_price - 0.01 }}" step="0.01" required
+                                            class="w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
+                                    </div>
+                                </div>
+
+                                <p class="text-xs text-gray-600 mb-3">
+                                    Listed price: ₱{{ number_format($product->selling_price, 2) }} ·
+                                    Your total: <span class="font-semibold" x-text="'₱' + ((bidQty || 0) * (bidPrice || 0)).toFixed(2)"></span>
+                                </p>
+
+                                <textarea name="message" rows="2" placeholder="Optional message to the farmer..."
+                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm mb-3"></textarea>
+
+                                @error('quantity') <p class="text-red-600 text-xs mb-2">{{ $message }}</p> @enderror
+                                @error('offered_price') <p class="text-red-600 text-xs mb-2">{{ $message }}</p> @enderror
+
+                                <button type="submit" class="bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md text-sm transition">
+                                    Send Offer
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <p class="text-xs text-gray-600 mb-3">
-            Listed price: ₱{{ number_format($product->selling_price, 2) }} ·
-            Your total: <span class="font-semibold" x-text="'₱' + ((bidQty || 0) * (bidPrice || 0)).toFixed(2)"></span>
-        </p>
-
-        <textarea name="message" rows="2" placeholder="Optional message to the farmer..."
-            class="block w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm mb-3"></textarea>
-
-        @error('quantity') <p class="text-red-600 text-xs mb-2">{{ $message }}</p> @enderror
-        @error('offered_price') <p class="text-red-600 text-xs mb-2">{{ $message }}</p> @enderror
-
-        <button type="submit" class="bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md text-sm transition">
-            Send Offer
-        </button>
-    </form>
-</div>
-</div>
-</form>
+    </div>
 </x-app-layout>

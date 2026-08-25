@@ -34,7 +34,7 @@
                         @foreach ($products as $product)
                             <a href="{{ route('marketplace.show', $product) }}" class="block border border-primary-600 rounded-lg p-4 hover:shadow-md transition">
                                 @if ($product->primaryImage)
-                                    <img src="{{ Storage::url($product->primaryImage->image_path) }}"
+                                    <img src="{{ Storage::disk('supabase')->url($product->primaryImage->image_path) }}"
                                          class="w-full h-32 object-cover rounded mb-3">
                                 @else
                                     <div class="w-full h-32 bg-gray-100 rounded mb-3 flex items-center justify-center text-gray-400 text-sm">

@@ -62,6 +62,18 @@ return [
 
     ],
 
+    'supabase' => [
+    'driver' => 's3',
+    'key' => env('SUPABASE_STORAGE_KEY'),
+    'secret' => env('SUPABASE_STORAGE_SECRET'),
+    'region' => 'us-east-1',
+    'bucket' => env('SUPABASE_STORAGE_BUCKET', 'teresa-uploads'),
+    'url' => env('SUPABASE_STORAGE_URL'),
+    'endpoint' => env('SUPABASE_STORAGE_ENDPOINT'),
+    'use_path_style_endpoint' => true,
+    'throw' => false,
+],
+
     /*
     |--------------------------------------------------------------------------
     | Symbolic Links
