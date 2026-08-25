@@ -47,7 +47,7 @@ return [
             'report' => false,
         ],
 
-        's3' => [
+                's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
@@ -60,19 +60,19 @@ return [
             'report' => false,
         ],
 
-    ],
+        'supabase' => [
+            'driver' => 's3',
+            'key' => env('SUPABASE_STORAGE_KEY'),
+            'secret' => env('SUPABASE_STORAGE_SECRET'),
+            'region' => 'ap-southeast-1',
+            'bucket' => env('SUPABASE_STORAGE_BUCKET', 'teresa-uploads'),
+            'url' => env('SUPABASE_STORAGE_URL'),
+            'endpoint' => env('SUPABASE_STORAGE_ENDPOINT'),
+            'use_path_style_endpoint' => true,
+            'throw' => false,
+        ],
 
-    'supabase' => [
-    'driver' => 's3',
-    'key' => env('SUPABASE_STORAGE_KEY'),
-    'secret' => env('SUPABASE_STORAGE_SECRET'),
-    'region' => 'ap-southeast-1',
-    'bucket' => env('SUPABASE_STORAGE_BUCKET', 'teresa-uploads'),
-    'url' => env('SUPABASE_STORAGE_URL'),
-    'endpoint' => env('SUPABASE_STORAGE_ENDPOINT'),
-    'use_path_style_endpoint' => true,
-    'throw' => false,
-],
+    ],
 
     /*
     |--------------------------------------------------------------------------
