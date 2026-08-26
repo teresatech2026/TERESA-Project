@@ -7,6 +7,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/debug-storage-config', function () {
+    return response()->json([
+        'endpoint' => config('filesystems.disks.supabase.endpoint'),
+        'endpoint_length' => strlen(config('filesystems.disks.supabase.endpoint') ?? ''),
+        'url' => config('filesystems.disks.supabase.url'),
+        'bucket' => config('filesystems.disks.supabase.bucket'),
+        'key_set' => !empty(config('filesystems.disks.supabase.key')),
+        'secret_set' => !empty(config('filesystems.disks.supabase.secret')),
+    ]);
+});
+
 Route::get('/dashboard', function () {
     return match (auth()->user()->role) {
         'farmer' => redirect()->route('farmer.products.index'),
@@ -18,10 +29,6 @@ Route::get('/dashboard', function () {
 Route::get('/farmer/dashboard', function () {
     return view('farmer.dashboard');
 })->middleware(['auth', 'role:farmer'])->name('farmer.dashboard');
-
-Route::get('/farmer/analytics', [\App\Http\Controllers\Farmer\AnalyticsController::class, 'index'])
-    ->middleware(['auth', 'role:farmer'])
-    ->name('farmer.analytics.index');
 
 Route::get('/farmer/products', [\App\Http\Controllers\Farmer\ProductController::class, 'index'])
     ->middleware(['auth', 'role:farmer'])
