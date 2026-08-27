@@ -7,17 +7,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/debug-storage-config', function () {
-    return response()->json([
-        'endpoint' => config('filesystems.disks.supabase.endpoint'),
-        'endpoint_length' => strlen(config('filesystems.disks.supabase.endpoint') ?? ''),
-        'url' => config('filesystems.disks.supabase.url'),
-        'bucket' => config('filesystems.disks.supabase.bucket'),
-        'key_set' => !empty(config('filesystems.disks.supabase.key')),
-        'secret_set' => !empty(config('filesystems.disks.supabase.secret')),
-    ]);
-});
-
 Route::get('/dashboard', function () {
     return match (auth()->user()->role) {
         'farmer' => redirect()->route('farmer.products.index'),
