@@ -63,6 +63,10 @@ Route::get('/buyer/dashboard', function () {
     return view('buyer.dashboard');
 })->middleware(['auth', 'role:buyer'])->name('buyer.dashboard');
 
+Route::get('/buyer/analytics', [\App\Http\Controllers\Buyer\AnalyticsController::class, 'index'])
+    ->middleware(['auth', 'role:buyer'])
+    ->name('buyer.analytics.index');
+
 Route::get('/marketplace', [\App\Http\Controllers\Buyer\MarketplaceController::class, 'index'])
     ->middleware(['auth', 'role:buyer'])
     ->name('marketplace.index');

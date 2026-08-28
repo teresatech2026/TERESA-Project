@@ -28,7 +28,7 @@
     </x-nav-link>
 @endif
 
-    @if (auth()->user()->role === 'buyer')
+   @if (auth()->user()->role === 'buyer')
     <x-nav-link :href="route('marketplace.index')" :active="request()->routeIs('marketplace.*')">
         {{ __('Marketplace') }}
     </x-nav-link>
@@ -38,8 +38,10 @@
     <x-nav-link :href="route('bids.index')" :active="request()->routeIs('bids.*')">
         {{ __('My Offers') }}
     </x-nav-link>
+    <x-nav-link :href="route('buyer.analytics.index')" :active="request()->routeIs('buyer.analytics.*')">
+        {{ __('My Analytics') }}
+    </x-nav-link>
 @endif
-
     @if (auth()->user()->role === 'admin')
         <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
             {{ __('Users') }}
