@@ -7,14 +7,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/debug-timezone', function () {
-    return response()->json([
-        'config_timezone' => config('app.timezone'),
-        'php_default_timezone' => date_default_timezone_get(),
-        'now' => now()->toDateTimeString(),
-        'now_with_tz' => now()->toDateTimeString() . ' (' . now()->timezoneName . ')',
-    ]);
-});
 
 Route::get('/dashboard', function () {
     return match (auth()->user()->role) {
