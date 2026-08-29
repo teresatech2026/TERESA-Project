@@ -51,12 +51,6 @@
         </x-nav-link>
     @endif
 
-    @if (in_array(auth()->user()->role, ['farmer', 'buyer']))
-        <x-nav-link :href="route('messages.index')" :active="request()->routeIs('messages.*')">
-            {{ __('Messages') }}
-        </x-nav-link>
-    @endif
-
     <x-nav-link :href="route('market-analytics.index')" :active="request()->routeIs('market-analytics.*')">
         {{ __('Market Analytics') }}
     </x-nav-link>
