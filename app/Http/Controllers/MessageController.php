@@ -98,6 +98,7 @@ class MessageController extends Controller
     'receiver_id' => $user->id,
     'related_product_id' => $request->input('related_product_id'),
     'message_text' => $request->message_text,
+    'created_at' => now(),
 ]);
 
     return back();
