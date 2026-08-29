@@ -98,16 +98,7 @@ class MessageController extends Controller
     'receiver_id' => $user->id,
     'related_product_id' => $request->input('related_product_id'),
     'message_text' => $request->message_text,
-    'created_at' => now(),
 ]);
-
-    \App\Models\Notification::notify(
-        $user->id,
-        'new_message',
-        'New Message from ' . auth()->user()->name,
-        \Illuminate\Support\Str::limit($request->message_text, 100),
-        route('messages.show', auth()->id())
-    );
 
     return back();
 }

@@ -11,14 +11,17 @@ class NotificationController extends Controller
      * List all notifications for the logged-in user.
      */
     public function index()
-    {
-        $notifications = auth()->user()->notifications()->latest()->get();
+{
+    $notifications = auth()->user()->notifications()
+        ->where('type', '!=', 'new_message')
+        ->latest()
+        ->get();
 
-        // Mark all as read once viewed
-        auth()->user()->notifications()->where('is_read', false)->update(['is_read' => true]);
+    // Mark all as read once viewed
+    auth()->user()->notifications()->where('is_read', false)->update(['is_read' => true]);
 
-        return view('notifications.index', compact('notifications'));
-    }
+    return view('notifications.index', compact('notifications'));
+}
 
     /**
      * Redirect to wherever a notification points, then mark it read (in case clicked from a dropdown).
