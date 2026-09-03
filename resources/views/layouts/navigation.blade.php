@@ -172,13 +172,19 @@
         @endif
 
         @if (auth()->user()->role === 'buyer')
-    <x-nav-link :href="route('marketplace.index')" :active="request()->routeIs('marketplace.*')">
-        {{ __('Marketplace') }}
-    </x-nav-link>
-    <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
-        {{ __('My Orders') }}
-    </x-nav-link>
-@endif
+            <x-responsive-nav-link :href="route('marketplace.index')" :active="request()->routeIs('marketplace.*')">
+                {{ __('Marketplace') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
+                {{ __('My Orders') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('bids.index')" :active="request()->routeIs('bids.*')">
+                {{ __('My Offers') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('buyer.analytics.index')" :active="request()->routeIs('buyer.analytics.*')">
+                {{ __('My Analytics') }}
+            </x-responsive-nav-link>
+        @endif
 
         @if (auth()->user()->role === 'admin')
             <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
@@ -189,12 +195,27 @@
             </x-responsive-nav-link>
         @endif
 
+        @if (in_array(auth()->user()->role, ['farmer', 'buyer']))
+            @php $unreadMessagesMobile = \App\Models\Message::where('receiver_id', auth()->id())->where('is_read', false)->count(); @endphp
+            <x-responsive-nav-link :href="route('messages.index')" :active="request()->routeIs('messages.*')">
+                {{ __('Messages') }}@if($unreadMessagesMobile > 0) ({{ $unreadMessagesMobile }}) @endif
+            </x-responsive-nav-link>
+        @endif
+
+        @if (auth()->user()->role === 'buyer')
+            @php $cartCountMobile = auth()->user()->buyer?->cartItems()->count() ?? 0; @endphp
+            <x-responsive-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.*')">
+                {{ __('Cart') }}@if($cartCountMobile > 0) ({{ $cartCountMobile }}) @endif
+            </x-responsive-nav-link>
+        @endif
+
         <x-responsive-nav-link :href="route('market-analytics.index')" :active="request()->routeIs('market-analytics.*')">
             {{ __('Market Analytics') }}
         </x-responsive-nav-link>
 
+        @php $unreadNotifMobile = auth()->user()->notifications()->where('is_read', false)->where('type', '!=', 'new_message')->count(); @endphp
         <x-responsive-nav-link :href="route('notifications.index')" :active="request()->routeIs('notifications.*')">
-            {{ __('Notifications') }}
+            {{ __('Notifications') }}@if($unreadNotifMobile > 0) ({{ $unreadNotifMobile }}) @endif
         </x-responsive-nav-link>
     </div>
 
