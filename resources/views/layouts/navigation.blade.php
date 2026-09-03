@@ -26,6 +26,9 @@
     <x-nav-link :href="route('farmer.bids.index')" :active="request()->routeIs('farmer.bids.*')">
         {{ __('Offers') }}
     </x-nav-link>
+    <x-nav-link :href="route('farmer.analytics.index')" :active="request()->routeIs('farmer.analytics.*')">
+        {{ __('My Analytics') }}
+    </x-nav-link>
 @endif
 
    @if (auth()->user()->role === 'buyer')
@@ -159,6 +162,12 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('farmer.orders.index')" :active="request()->routeIs('farmer.orders.*')">
                 {{ __('Orders') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('farmer.bids.index')" :active="request()->routeIs('farmer.bids.*')">
+                {{ __('Offers') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('farmer.analytics.index')" :active="request()->routeIs('farmer.analytics.*')">
+                {{ __('My Analytics') }}
             </x-responsive-nav-link>
         @endif
 

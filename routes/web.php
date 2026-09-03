@@ -60,6 +60,10 @@ Route::patch('/farmer/bids/{bid}/reject', [\App\Http\Controllers\Farmer\BidContr
     ->middleware(['auth', 'role:farmer'])
     ->name('farmer.bids.reject');
 
+Route::get('/farmer/analytics', [\App\Http\Controllers\Farmer\AnalyticsController::class, 'index'])
+    ->middleware(['auth', 'role:farmer'])
+    ->name('farmer.analytics.index');
+
 Route::get('/buyer/dashboard', function () {
     return view('buyer.dashboard');
 })->middleware(['auth', 'role:buyer'])->name('buyer.dashboard');
