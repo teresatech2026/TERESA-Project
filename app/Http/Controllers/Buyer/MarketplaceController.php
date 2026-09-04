@@ -36,6 +36,7 @@ class MarketplaceController extends Controller
      */
     public function show(Product $product)
     {
+        abort_unless($product->status === 'active', 404);
         $product->load(['images', 'farmer']);
 
         return view('buyer.marketplace.show', compact('product'));
