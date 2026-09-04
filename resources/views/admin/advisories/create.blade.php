@@ -39,8 +39,8 @@
                     </div>
 
                     <div class="mb-4">
-                        <x-input-label for="image" value="Image (optional)" />
-                        <input type="file" id="image" name="image" accept="image/*"
+                        <x-input-label for="images" value="Images (optional, you can select multiple)" />
+                        <input type="file" id="images" name="images[]" accept="image/*" multiple
                             class="block mt-1 w-full text-sm text-gray-600 border border-gray-300 rounded-md">
                     </div>
 

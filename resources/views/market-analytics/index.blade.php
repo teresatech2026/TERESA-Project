@@ -102,9 +102,21 @@
                     <div class="space-y-6">
                         @foreach ($advisories as $advisory)
                             <div class="border-b pb-6 last:border-0">
-                                @if ($advisory->image_path)
-                                    <img src="{{ Storage::disk('supabase')->url($advisory->image_path) }}" class="w-full max-h-64 object-cover rounded-lg mb-3">
+
+                                @if ($advisory->images->isNotEmpty())
+                                    {{-- New multi-image advisories: show a gallery grid --}}
+                                    <div class="grid gap-2 mb-3 {{ $advisory->images->count() === 1 ? 'grid-cols-1' : 'grid-cols-2 md:grid-cols-3' }}">
+                                        @foreach ($advisory->images as $image)
+                                            <img src="{{ Storage::disk('supabase')->url($image->image_path) }}"
+                                                 class="w-full aspect-video object-cover rounded-lg">
+                                        @endforeach
+                                    </div>
+                                @elseif ($advisory->image_path)
+                                    {{-- Older advisories published before multi-image support --}}
+                                    <img src="{{ Storage::disk('supabase')->url($advisory->image_path) }}"
+                                         class="w-full aspect-video object-cover rounded-lg mb-3">
                                 @endif
+
                                 <div class="flex justify-between items-start">
                                     <div>
                                         <h4 class="font-semibold">{{ $advisory->title }}</h4>

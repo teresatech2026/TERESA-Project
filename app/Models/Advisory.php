@@ -14,4 +14,6 @@ class Advisory extends Model
     protected $casts = ['date_published' => 'date'];
 
     public function admin() { return $this->belongsTo(Admin::class); }
+
+    public function images() { return $this->hasMany(AdvisoryImage::class)->orderBy('sort_order'); }
 }
