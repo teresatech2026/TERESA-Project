@@ -6,20 +6,41 @@ use App\Http\Controllers\Controller;
 use App\Models\Bid;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class BidController extends Controller
 {
+    /**
+     * Determine whether a product is sold by a whole-number ("piece") unit.
+     */
+    private function isPieceUnit(Product $product): bool
+    {
+        return in_array(
+            strtolower(trim($product->unit_of_measurement)),
+            ['piece', 'pieces', 'pc', 'pcs']
+        );
+    }
+
     /**
      * Submit a new bid (offer) on a product.
      */
     public function store(Request $request, Product $product)
     {
+        $isPieceUnit = $this->isPieceUnit($product);
+
         $request->validate([
-            'quantity' => 'required|numeric|min:0.01|max:' . $product->available_quantity,
+            'quantity' => [
+                'required',
+                'numeric',
+                'min:' . ($isPieceUnit ? 1 : 0.01),
+                'max:' . $product->available_quantity,
+                Rule::when($isPieceUnit, ['integer']),
+            ],
             'offered_price' => 'required|numeric|min:0.01|lt:' . $product->selling_price,
             'message' => 'nullable|string|max:500',
         ], [
             'quantity.max' => 'You cannot bid for more than the available stock.',
+            'quantity.integer' => 'This product is sold by the piece, so quantity must be a whole number.',
             'offered_price.lt' => 'Your offer must be lower than the listed price (₱' . number_format($product->selling_price, 2) . ').',
         ]);
 

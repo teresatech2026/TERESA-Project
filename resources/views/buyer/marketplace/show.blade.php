@@ -10,6 +10,10 @@
         </div>
     </x-slot>
 
+    @php
+        $isPieceUnit = in_array(strtolower(trim($product->unit_of_measurement)), ['piece', 'pieces', 'pc', 'pcs']);
+    @endphp
+
     <div class="py-12">
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
@@ -90,10 +94,17 @@
                         </div>
 
                         <!-- Actions -->
-                        <div x-data="{ quantity: {{ $product->minimum_order_quantity ?? 1 }}, price: {{ $product->selling_price }} }">
+                        <div x-data="{
+                                quantity: {{ $isPieceUnit ? (int) ($product->minimum_order_quantity ?? 1) : ($product->minimum_order_quantity ?? 1) }},
+                                price: {{ $product->selling_price }},
+                                isPieceUnit: {{ $isPieceUnit ? 'true' : 'false' }}
+                             }">
                             <div class="mb-3">
                                 <label class="block text-xs text-gray-500 mb-1">Quantity ({{ $product->unit_of_measurement }})</label>
-                                <input type="number" x-model.number="quantity" min="0.01" step="0.01"
+                                <input type="number" x-model.number="quantity"
+                                    min="{{ $isPieceUnit ? 1 : 0.01 }}"
+                                    step="{{ $isPieceUnit ? 1 : 0.01 }}"
+                                    @input="if (isPieceUnit) quantity = Math.max(1, Math.round(quantity))"
                                     class="w-24 border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
                                 <p class="text-sm text-gray-600 mt-1">
                                     Total: <span class="font-semibold text-gray-900" x-text="'₱' + (quantity * price).toFixed(2)"></span>
@@ -124,7 +135,12 @@
                             </div>
                         </div>
 
-                        <div class="mt-4 border-t pt-4" x-data="{ showBidForm: false, bidQty: {{ $product->minimum_order_quantity ?? 1 }}, bidPrice: '' }">
+                        <div class="mt-4 border-t pt-4" x-data="{
+                                showBidForm: false,
+                                bidQty: {{ $isPieceUnit ? (int) ($product->minimum_order_quantity ?? 1) : ($product->minimum_order_quantity ?? 1) }},
+                                bidPrice: '',
+                                isPieceUnit: {{ $isPieceUnit ? 'true' : 'false' }}
+                             }">
                             <button type="button" @click="showBidForm = !showBidForm"
                                 class="text-sm text-accent-600 hover:underline font-semibold flex items-center gap-1">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -140,7 +156,12 @@
                                 <div class="grid grid-cols-2 gap-3 mb-3">
                                     <div>
                                         <label class="block text-xs text-gray-500 mb-1">Quantity ({{ $product->unit_of_measurement }})</label>
-                                        <input type="number" name="quantity" x-model.number="bidQty" min="0.01" max="{{ $product->available_quantity }}" step="0.01" required
+                                        <input type="number" name="quantity" x-model.number="bidQty"
+                                            min="{{ $isPieceUnit ? 1 : 0.01 }}"
+                                            max="{{ $isPieceUnit ? (int) $product->available_quantity : $product->available_quantity }}"
+                                            step="{{ $isPieceUnit ? 1 : 0.01 }}"
+                                            @input="if (isPieceUnit) bidQty = Math.max(1, Math.round(bidQty))"
+                                            required
                                             class="w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
                                     </div>
                                     <div>

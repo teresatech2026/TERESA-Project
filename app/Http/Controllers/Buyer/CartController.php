@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CartController extends Controller
 {
@@ -26,12 +27,36 @@ class CartController extends Controller
     }
 
     /**
+     * Determine whether a product is sold by a whole-number ("piece") unit.
+     */
+    private function isPieceUnit(Product $product): bool
+    {
+        return in_array(
+            strtolower(trim($product->unit_of_measurement)),
+            ['piece', 'pieces', 'pc', 'pcs']
+        );
+    }
+
+    /**
+     * The quantity validation rule, adjusted for piece-based products.
+     */
+    private function quantityRule(Product $product): array
+    {
+        return [
+            'required',
+            'numeric',
+            'min:' . ($this->isPieceUnit($product) ? 1 : 0.01),
+            Rule::when($this->isPieceUnit($product), ['integer']),
+        ];
+    }
+
+    /**
      * Add a product to the cart.
      */
     public function store(Request $request, Product $product)
     {
         $request->validate([
-            'quantity' => 'required|numeric|min:0.01',
+            'quantity' => $this->quantityRule($product),
         ]);
 
         $buyer = auth()->user()->buyer;
@@ -60,7 +85,7 @@ class CartController extends Controller
     public function buyNow(Request $request, Product $product)
     {
         $request->validate([
-            'quantity' => 'required|numeric|min:0.01',
+            'quantity' => $this->quantityRule($product),
         ]);
 
         $buyer = auth()->user()->buyer;
@@ -93,7 +118,7 @@ class CartController extends Controller
         );
 
         $request->validate([
-            'quantity' => 'required|numeric|min:0.01',
+            'quantity' => $this->quantityRule($cartItem->product),
         ]);
 
         $cartItem->update([
