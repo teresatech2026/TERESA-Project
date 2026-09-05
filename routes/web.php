@@ -140,14 +140,6 @@ Route::get('/admin/users', [\App\Http\Controllers\Admin\UserManagementController
     ->middleware(['auth', 'role:admin'])
     ->name('admin.users.index');
 
-Route::get('/admin/users/{user}', [\App\Http\Controllers\Admin\UserManagementController::class, 'show'])
-    ->middleware(['auth', 'role:admin'])
-    ->name('admin.users.show');
-
-Route::patch('/admin/users/{user}/toggle-active', [\App\Http\Controllers\Admin\UserManagementController::class, 'toggleActive'])
-    ->middleware(['auth', 'role:admin'])
-    ->name('admin.users.toggleActive');
-
 Route::get('/admin/users/create-farmer', [\App\Http\Controllers\Admin\UserManagementController::class, 'createFarmer'])
     ->middleware(['auth', 'role:admin'])
     ->name('admin.users.create-farmer');
@@ -156,6 +148,13 @@ Route::post('/admin/users/create-farmer', [\App\Http\Controllers\Admin\UserManag
     ->middleware(['auth', 'role:admin'])
     ->name('admin.users.store-farmer');
 
+Route::get('/admin/users/{user}', [\App\Http\Controllers\Admin\UserManagementController::class, 'show'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.users.show');
+
+Route::patch('/admin/users/{user}/toggle-active', [\App\Http\Controllers\Admin\UserManagementController::class, 'toggleActive'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.users.toggleActive');
 Route::get('/admin/reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])
     ->middleware(['auth', 'role:admin'])
     ->name('admin.reports.index');
