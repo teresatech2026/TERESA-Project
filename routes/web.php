@@ -148,6 +148,14 @@ Route::patch('/admin/users/{user}/toggle-active', [\App\Http\Controllers\Admin\U
     ->middleware(['auth', 'role:admin'])
     ->name('admin.users.toggleActive');
 
+Route::get('/admin/users/create-farmer', [\App\Http\Controllers\Admin\UserManagementController::class, 'createFarmer'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.users.create-farmer');
+
+Route::post('/admin/users/create-farmer', [\App\Http\Controllers\Admin\UserManagementController::class, 'storeFarmer'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.users.store-farmer');
+
 Route::get('/admin/reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])
     ->middleware(['auth', 'role:admin'])
     ->name('admin.reports.index');

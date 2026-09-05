@@ -1,8 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('User Management') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('User Management') }}
+            </h2>
+            <a href="{{ route('admin.users.create-farmer') }}"
+               class="bg-primary-600 border-2 border-transparent hover:border-accent-500 text-white font-semibold px-4 py-2 rounded-md text-sm transition">
+                + Register Farmer
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-12">
