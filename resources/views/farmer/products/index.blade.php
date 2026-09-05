@@ -39,6 +39,9 @@
                                 <p class="text-sm text-gray-500">{{ $product->commodity_type }} — {{ $product->category }}</p>
                                 <p class="mt-1 font-medium">₱{{ number_format($product->selling_price, 2) }} / {{ $product->unit_of_measurement }}</p>
                                 <p class="text-sm text-gray-500">Qty: {{ $product->available_quantity }}</p>
+                                <p class="text-xs text-gray-400 mt-1">
+                                    Posted {{ $product->created_at->format('M d, Y g:i A') }} ({{ $product->created_at->diffForHumans() }})
+                                </p>
                                 <span class="inline-block mt-2 text-xs px-2 py-1 rounded-full
                                     {{ $product->status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600' }}">
                                     {{ ucfirst($product->status) }}

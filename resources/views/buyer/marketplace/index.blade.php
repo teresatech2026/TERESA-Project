@@ -47,6 +47,9 @@
                                 <p class="text-xs text-gray-500 mt-1">
                                     by {{ $product->farmer->full_name }} · {{ $product->farmer->barangay }}
                                 </p>
+                                <p class="text-xs text-gray-400 mt-1">
+                                    Posted {{ $product->created_at->format('M d, Y g:i A') }} ({{ $product->created_at->diffForHumans() }})
+                                </p>
                             </a>
                         @endforeach
                     </div>
