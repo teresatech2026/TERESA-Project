@@ -32,9 +32,9 @@
                         <x-input-error :messages="$errors->get('name')" class="mt-2" />
                     </div>
 
-                    <div class="mb-4">
-                        <x-input-label for="email" value="Email (optional)" />
-                        <x-text-input id="email" name="email" type="email" class="block mt-1 w-full" :value="old('email')" />
+                   <div class="mb-4">
+                        <x-input-label for="email" value="Email" />
+                        <x-text-input id="email" name="email" type="email" class="block mt-1 w-full" :value="old('email')" required />
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
 
