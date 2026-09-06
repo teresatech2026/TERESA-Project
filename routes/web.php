@@ -112,6 +112,14 @@ Route::patch('/my-offers/{bid}/cancel', [\App\Http\Controllers\Buyer\BidControll
     ->middleware(['auth', 'role:buyer'])
     ->name('bids.cancel');
 
+Route::get('/my-offers/{bid}/checkout', [\App\Http\Controllers\Buyer\BidController::class, 'checkout'])
+    ->middleware(['auth', 'role:buyer'])
+    ->name('bids.checkout');
+
+Route::post('/my-offers/{bid}/checkout', [\App\Http\Controllers\Buyer\BidController::class, 'completeCheckout'])
+    ->middleware(['auth', 'role:buyer'])
+    ->name('bids.checkout.store');
+
 Route::get('/checkout', [\App\Http\Controllers\Buyer\OrderController::class, 'checkout'])
     ->middleware(['auth', 'role:buyer'])
     ->name('checkout');

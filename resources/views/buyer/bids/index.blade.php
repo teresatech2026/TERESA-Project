@@ -22,7 +22,7 @@
                         @foreach ($bids as $bid)
                             <div class="border rounded-lg p-4 flex gap-4">
                                 @if ($bid->product->primaryImage)
-                                    <img src="{{ Storage::url($bid->product->primaryImage->image_path) }}"
+                                    <img src="{{ Storage::disk('supabase')->url($bid->product->primaryImage->image_path) }}"
                                          class="w-16 h-16 object-cover rounded flex-shrink-0">
                                 @else
                                     <div class="w-16 h-16 bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs flex-shrink-0">
@@ -49,26 +49,32 @@
                                         = <strong>₱{{ number_format($bid->offered_total, 2) }}</strong>
                                     </p>
 
-                                    @if ($bid->status === 'accepted' && $bid->order)
-                                        <div class="flex items-center gap-2 mt-2">
-                                            <span class="text-xs text-gray-500">Order status:</span>
-                                            <span class="inline-block text-xs px-2 py-1 rounded-full
-                                                @switch($bid->order->status)
-                                                    @case('pending') bg-yellow-100 text-yellow-700 @break
-                                                    @case('confirmed') bg-blue-100 text-blue-700 @break
-                                                    @case('preparing') bg-blue-100 text-blue-700 @break
-                                                    @case('ready_for_pickup') bg-purple-100 text-purple-700 @break
-                                                    @case('out_for_delivery') bg-purple-100 text-purple-700 @break
-                                                    @case('completed') bg-green-100 text-green-700 @break
-                                                    @case('cancelled') bg-red-100 text-red-700 @break
-                                                    @default bg-gray-100 text-gray-600
-                                                @endswitch">
-                                                {{ ucwords(str_replace('_', ' ', $bid->order->status)) }}
-                                            </span>
-                                        </div>
-                                        <a href="{{ route('orders.show', $bid->order_id) }}" class="text-xs text-primary-600 hover:underline mt-1 inline-block">
-                                            View Order &rarr;
-                                        </a>
+                                    @if ($bid->status === 'accepted')
+                                        @if ($bid->order)
+                                            <div class="flex items-center gap-2 mt-2">
+                                                <span class="text-xs text-gray-500">Order status:</span>
+                                                <span class="inline-block text-xs px-2 py-1 rounded-full
+                                                    @switch($bid->order->status)
+                                                        @case('pending') bg-yellow-100 text-yellow-700 @break
+                                                        @case('confirmed') bg-blue-100 text-blue-700 @break
+                                                        @case('preparing') bg-blue-100 text-blue-700 @break
+                                                        @case('ready_for_pickup') bg-purple-100 text-purple-700 @break
+                                                        @case('out_for_delivery') bg-purple-100 text-purple-700 @break
+                                                        @case('completed') bg-green-100 text-green-700 @break
+                                                        @case('cancelled') bg-red-100 text-red-700 @break
+                                                        @default bg-gray-100 text-gray-600
+                                                    @endswitch">
+                                                    {{ ucwords(str_replace('_', ' ', $bid->order->status)) }}
+                                                </span>
+                                            </div>
+                                            <a href="{{ route('orders.show', $bid->order_id) }}" class="text-xs text-primary-600 hover:underline mt-1 inline-block">
+                                                View Order &rarr;
+                                            </a>
+                                        @else
+                                            <a href="{{ route('bids.checkout', $bid) }}" class="text-xs text-white bg-primary-600 hover:bg-primary-700 px-3 py-1.5 rounded-md mt-2 inline-block">
+                                                Complete Order &rarr;
+                                            </a>
+                                        @endif
                                     @endif
 
                                     @if ($bid->status === 'pending')
