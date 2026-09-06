@@ -41,9 +41,12 @@
                                         No Image
                                     </div>
                                 @endif
-                                <h3 class="font-semibold">{{ $product->product_name }}</h3>
+                                <p class="text-lg font-bold text-primary-700">
+                                    ₱{{ number_format($product->selling_price, 2) }}
+                                    <span class="text-xs font-normal text-gray-500">/ {{ $product->unit_of_measurement }}</span>
+                                </p>
+                                <h3 class="text-sm text-gray-700">{{ $product->product_name }}</h3>
                                 <p class="text-xs text-gray-500">{{ $product->commodity_type }}</p>
-                                <p class="mt-1 font-medium">₱{{ number_format($product->selling_price, 2) }} / {{ $product->unit_of_measurement }}</p>
                                 <p class="text-xs text-gray-500 mt-1">
                                     by {{ $product->farmer->full_name }} · {{ $product->farmer->barangay }}
                                 </p>

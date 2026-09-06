@@ -35,9 +35,12 @@
                                         No Image
                                     </div>
                                 @endif
-                                <h3 class="font-semibold">{{ $product->product_name }}</h3>
+                                <p class="text-lg font-bold text-primary-700">
+                                    ₱{{ number_format($product->selling_price, 2) }}
+                                    <span class="text-xs font-normal text-gray-500">/ {{ $product->unit_of_measurement }}</span>
+                                </p>
+                                <h3 class="text-sm text-gray-700">{{ $product->product_name }}</h3>
                                 <p class="text-sm text-gray-500">{{ $product->commodity_type }} — {{ $product->category }}</p>
-                                <p class="mt-1 font-medium">₱{{ number_format($product->selling_price, 2) }} / {{ $product->unit_of_measurement }}</p>
                                 <p class="text-sm text-gray-500">Qty: {{ $product->available_quantity }}</p>
                                 <p class="text-xs text-gray-400 mt-1">
                                     Posted {{ $product->created_at->format('M d, Y g:i A') }} ({{ $product->created_at->diffForHumans() }})
