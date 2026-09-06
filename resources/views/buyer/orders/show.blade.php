@@ -38,7 +38,10 @@
                 <div class="divide-y mb-6">
                     @foreach ($order->items as $item)
                         <div class="flex justify-between py-2 text-sm">
-                            <span>{{ $item->product_name_snapshot }} × {{ $item->quantity }}</span>
+                            <span>
+                                {{ $item->product_name_snapshot }} × {{ $item->quantity }}
+                                <span class="text-gray-400">(₱{{ number_format($item->unit_price, 2) }} each)</span>
+                            </span>
                             <span>₱{{ number_format($item->subtotal, 2) }}</span>
                         </div>
                     @endforeach
