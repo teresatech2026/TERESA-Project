@@ -145,7 +145,7 @@ class BidController extends Controller
                 'subtotal' => $bid->quantity * $bid->offered_price,
             ]);
 
-            $bid->product->decrement('available_quantity', $bid->quantity);
+           $bid->product->decrementStock($bid->quantity);
 
             $bid->update(['order_id' => $order->id]);
 

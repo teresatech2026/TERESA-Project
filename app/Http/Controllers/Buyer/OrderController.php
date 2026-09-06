@@ -80,7 +80,7 @@ class OrderController extends Controller
                     ]);
 
                     // Reduce available stock
-                    $item->product->decrement('available_quantity', $item->quantity);
+                  $item->product->decrementStock($item->quantity);
                 }
             }
 

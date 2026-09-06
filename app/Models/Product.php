@@ -39,4 +39,19 @@ class Product extends Model
             default         => 'Very Fresh',
         };
     }
+
+    /**
+     * Reduce stock and automatically mark the product out_of_stock
+     * once quantity reaches zero, so it disappears from the buyer
+     * marketplace (which only shows status = active).
+     */
+    public function decrementStock(float $quantity): void
+    {
+        $this->decrement('available_quantity', $quantity);
+        $this->refresh();
+
+        if ($this->available_quantity <= 0 && $this->status === 'active') {
+            $this->update(['status' => 'out_of_stock']);
+        }
+    }
 }
