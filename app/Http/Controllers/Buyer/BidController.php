@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Buyer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bid;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class BidController extends Controller
@@ -70,7 +73,7 @@ class BidController extends Controller
     public function index()
     {
         $bids = auth()->user()->buyer->bids()
-            ->with(['product.farmer', 'product.images'])
+            ->with(['product.farmer', 'product.images', 'order'])
             ->latest()
             ->get();
 
@@ -88,5 +91,75 @@ class BidController extends Controller
         $bid->update(['status' => 'cancelled']);
 
         return back()->with('success', 'Offer cancelled.');
+    }
+
+    /**
+     * Show the checkout page for an accepted bid, where the buyer
+     * chooses pickup/delivery before the order is actually created.
+     */
+    public function checkout(Bid $bid)
+    {
+        abort_unless($bid->buyer_id === auth()->user()->buyer->id, 403);
+        abort_unless($bid->status === 'accepted', 403, 'This offer has not been accepted yet.');
+        abort_if($bid->order_id, 403, 'This offer has already been checked out.');
+
+        $bid->load('product.farmer');
+
+        return view('buyer.bids.checkout', compact('bid'));
+    }
+
+    /**
+     * Complete the checkout for an accepted bid — creates the real
+     * Order and OrderItem using the negotiated quantity and price,
+     * and reserves stock at this point.
+     */
+    public function completeCheckout(Request $request, Bid $bid)
+    {
+        abort_unless($bid->buyer_id === auth()->user()->buyer->id, 403);
+        abort_unless($bid->status === 'accepted', 403, 'This offer has not been accepted yet.');
+        abort_if($bid->order_id, 403, 'This offer has already been checked out.');
+
+        $request->validate([
+            'delivery_option' => 'required|in:pickup,delivery',
+            'delivery_address' => 'required_if:delivery_option,delivery|nullable|string|max:500',
+        ]);
+
+        abort_if($bid->quantity > $bid->product->available_quantity, 422, 'Not enough stock left to complete this order.');
+
+        $order = DB::transaction(function () use ($bid, $request) {
+            $order = Order::create([
+                'buyer_id' => $bid->buyer_id,
+                'farmer_id' => $bid->product->farmer_id,
+                'status' => 'pending',
+                'delivery_option' => $request->delivery_option,
+                'delivery_address' => $request->delivery_option === 'delivery' ? $request->delivery_address : null,
+                'total_amount' => $bid->quantity * $bid->offered_price,
+            ]);
+
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $bid->product_id,
+                'product_name_snapshot' => $bid->product->product_name . ' (negotiated price)',
+                'quantity' => $bid->quantity,
+                'unit_price' => $bid->offered_price,
+                'subtotal' => $bid->quantity * $bid->offered_price,
+            ]);
+
+            $bid->product->decrement('available_quantity', $bid->quantity);
+
+            $bid->update(['order_id' => $order->id]);
+
+            \App\Models\Notification::notify(
+                $order->farmer->user_id,
+                'new_order',
+                'Negotiated Order Confirmed',
+                "{$bid->buyer->full_name} completed checkout for the negotiated order (#{$order->id}).",
+                route('farmer.orders.show', $order)
+            );
+
+            return $order;
+        });
+
+        return redirect()->route('orders.show', $order)->with('success', 'Order placed successfully!');
     }
 }
