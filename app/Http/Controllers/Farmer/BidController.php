@@ -18,7 +18,7 @@ class BidController extends Controller
 
         $bids = Bid::whereHas('product', fn ($q) => $q->where('farmer_id', $farmer->id))
             ->when($status !== 'all', fn ($q) => $q->where('status', $status))
-            ->with(['product', 'buyer'])
+            ->with(['product', 'buyer', 'order'])
             ->latest()
             ->get();
 
