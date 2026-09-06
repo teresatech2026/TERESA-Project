@@ -12,7 +12,18 @@
     <form method="GET" action="{{ route('marketplace.index') }}" class="mb-6">
         <div class="relative max-w-md">
             <input type="text" name="search" value="{{ $search }}" placeholder="Search products, commodity, or category..."
-                class="w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm pr-10">
+                class="w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm pr-16">
+
+            @if ($search)
+                <a href="{{ route('marketplace.index') }}"
+                   title="Clear search"
+                   class="absolute top-1/2 right-9 -translate-y-1/2 text-gray-400 hover:text-red-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </a>
+            @endif
+
             <button type="submit" class="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-primary-600">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -22,13 +33,20 @@
         @if ($search)
             <p class="text-xs text-gray-500 mt-2">
                 Showing results for "<strong>{{ $search }}</strong>" ·
-                <a href="{{ route('marketplace.index') }}" class="text-primary-600 hover:underline">Clear search</a>
+                <a href="{{ route('marketplace.index') }}" class="text-primary-600 hover:underline font-medium">
+                    &larr; Back to full Marketplace
+                </a>
             </p>
         @endif
     </form>
 
     @if ($products->isEmpty())
-                    <p class="text-gray-500">No products available yet. Check back soon!</p>
+                    <p class="text-gray-500">
+                        No products found@if($search) for "<strong>{{ $search }}</strong>"@endif.
+                        @if ($search)
+                            <a href="{{ route('marketplace.index') }}" class="text-primary-600 hover:underline">Go back to Marketplace</a>
+                        @endif
+                    </p>
                 @else
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         @foreach ($products as $product)
