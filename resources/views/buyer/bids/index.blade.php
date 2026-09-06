@@ -20,6 +20,9 @@
                 @else
                     <div class="space-y-4">
                         @foreach ($bids as $bid)
+                            @php
+                                $cancelMessage = 'Are you sure you want to cancel your offer of ₱' . number_format($bid->offered_price, 2) . ' for ' . $bid->product->product_name . '?';
+                            @endphp
                             <div class="border rounded-lg p-4 flex gap-4">
                                 @if ($bid->product->primaryImage)
                                     <img src="{{ Storage::disk('supabase')->url($bid->product->primaryImage->image_path) }}"
@@ -78,11 +81,17 @@
                                     @endif
 
                                     @if ($bid->status === 'pending')
-                                        <form method="POST" action="{{ route('bids.cancel', $bid) }}" class="mt-2">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="text-xs text-red-500 hover:underline">Cancel Offer</button>
-                                        </form>
+                                        <x-confirm-action
+                                            :action="route('bids.cancel', $bid)"
+                                            method="PATCH"
+                                            title="Cancel this offer?"
+                                            :message="$cancelMessage"
+                                            confirmText="Yes, Cancel Offer"
+                                        >
+                                            <x-slot:trigger>
+                                                <button type="button" class="text-xs text-red-500 hover:underline mt-2">Cancel Offer</button>
+                                            </x-slot:trigger>
+                                        </x-confirm-action>
                                     @endif
                                 </div>
                             </div>

@@ -104,7 +104,6 @@
                             <div class="border-b pb-6 last:border-0">
 
                                 @if ($advisory->images->isNotEmpty())
-                                    {{-- New multi-image advisories: show a gallery grid --}}
                                     <div class="grid gap-2 mb-3 {{ $advisory->images->count() === 1 ? 'grid-cols-1' : 'grid-cols-2 md:grid-cols-3' }}">
                                         @foreach ($advisory->images as $image)
                                             <img src="{{ Storage::disk('supabase')->url($image->image_path) }}"
@@ -112,7 +111,6 @@
                                         @endforeach
                                     </div>
                                 @elseif ($advisory->image_path)
-                                    {{-- Older advisories published before multi-image support --}}
                                     <img src="{{ Storage::disk('supabase')->url($advisory->image_path) }}"
                                          class="w-full aspect-video object-cover rounded-lg mb-3">
                                 @endif
@@ -127,12 +125,17 @@
                                         @endif
                                     </div>
                                     @if (auth()->user()->role === 'admin')
-                                        <form method="POST" action="{{ route('admin.advisories.destroy', $advisory) }}"
-                                              onsubmit="return confirm('Delete this advisory?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-xs text-red-500 hover:underline">Delete</button>
-                                        </form>
+                                        <x-confirm-action
+                                            :action="route('admin.advisories.destroy', $advisory)"
+                                            method="DELETE"
+                                            title="Delete advisory?"
+                                           :message="'Are you sure you want to delete ' . $advisory->title . '? This cannot be undone.'"
+                                            confirmText="Yes, Delete"
+                                        >
+                                            <x-slot:trigger>
+                                                <button type="button" class="text-xs text-red-500 hover:underline">Delete</button>
+                                            </x-slot:trigger>
+                                        </x-confirm-action>
                                     @endif
                                 </div>
                                 <p class="text-sm text-gray-700 mt-2">{{ $advisory->content }}</p>

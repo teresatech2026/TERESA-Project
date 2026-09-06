@@ -50,11 +50,17 @@
                                     ₱{{ number_format($item->quantity * $item->product->selling_price, 2) }}
                                 </p>
 
-                                <form method="POST" action="{{ route('cart.destroy', $item) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:text-red-700 text-sm">✕</button>
-                                </form>
+                                <x-confirm-action
+                                    :action="route('cart.destroy', $item)"
+                                    method="DELETE"
+                                    title="Remove item?"
+                                    :message="'Are you sure you want to remove ' . $item->product->product_name . ' from your cart?'"
+                                    confirmText="Yes, Remove"
+                                >
+                                    <x-slot:trigger>
+                                        <button type="button" class="text-red-500 hover:text-red-700 text-sm">✕</button>
+                                    </x-slot:trigger>
+                                </x-confirm-action>
                             </div>
                         @endforeach
                     </div>

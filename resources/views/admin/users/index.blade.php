@@ -48,6 +48,14 @@
                         </thead>
                         <tbody class="divide-y">
                             @foreach ($users as $user)
+                                @php
+                                    $confirmTitle = $user->is_active ? 'Deactivate this account?' : 'Activate this account?';
+                                    $confirmMessage = $user->is_active
+                                        ? 'This will deactivate ' . $user->name . ' and they will no longer be able to log in.'
+                                        : 'This will activate ' . $user->name . ' and restore their access.';
+                                    $confirmButtonText = $user->is_active ? 'Yes, Deactivate' : 'Yes, Activate';
+                                    $confirmButtonClass = $user->is_active ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-primary-600 hover:bg-primary-700 text-white';
+                                @endphp
                                 <tr>
                                     <td class="py-3">
                                         <a href="{{ route('admin.users.show', $user) }}" class="font-medium text-primary-600 hover:underline">
@@ -64,13 +72,20 @@
                                         </span>
                                     </td>
                                     <td class="py-3 text-right">
-                                        <form method="POST" action="{{ route('admin.users.toggleActive', $user) }}">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="text-xs text-gray-500 hover:text-red-600 underline">
-                                                {{ $user->is_active ? 'Deactivate' : 'Activate' }}
-                                            </button>
-                                        </form>
+                                        <x-confirm-action
+                                            :action="route('admin.users.toggleActive', $user)"
+                                            method="PATCH"
+                                            :title="$confirmTitle"
+                                            :message="$confirmMessage"
+                                            :confirmText="$confirmButtonText"
+                                            :confirmClass="$confirmButtonClass"
+                                        >
+                                            <x-slot:trigger>
+                                                <button type="button" class="text-xs text-gray-500 hover:text-red-600 underline">
+                                                    {{ $user->is_active ? 'Deactivate' : 'Activate' }}
+                                                </button>
+                                            </x-slot:trigger>
+                                        </x-confirm-action>
                                     </td>
                                 </tr>
                             @endforeach
