@@ -61,6 +61,14 @@
                                         <a href="{{ route('admin.users.show', $user) }}" class="font-medium text-primary-600 hover:underline">
                                             {{ $user->name }}
                                         </a>
+                                        @if ($user->role === 'farmer' && $user->farmer?->rsbsa_number)
+                                            <span class="inline-flex items-center gap-1 ml-2 text-xs px-1.5 py-0.5 rounded bg-gray-100 text-gray-600" title="RSBSA Number: {{ $user->farmer->rsbsa_number }}">
+                                                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                RSBSA
+                                            </span>
+                                        @endif
                                     </td>
                                     <td class="py-3 capitalize">{{ $user->role }}</td>
                                     <td class="py-3 text-gray-500">

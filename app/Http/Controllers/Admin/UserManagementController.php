@@ -71,6 +71,7 @@ class UserManagementController extends Controller
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'mobile_number' => 'required|string|max:20',
             'barangay' => 'required|string|max:100',
+            'rsbsa_number' => 'nullable|string|max:50',
             'sex' => 'nullable|in:Male,Female',
             'date_of_birth' => 'nullable|date',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
@@ -91,6 +92,7 @@ class UserManagementController extends Controller
             'date_of_birth' => $request->date_of_birth,
             'mobile_number' => $request->mobile_number,
             'barangay' => $request->barangay,
+            'rsbsa_number' => $request->rsbsa_number,
         ]);
 
         return redirect()->route('admin.users.index', ['role' => 'farmer'])

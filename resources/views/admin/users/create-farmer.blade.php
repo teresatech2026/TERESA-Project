@@ -32,7 +32,7 @@
                         <x-input-error :messages="$errors->get('name')" class="mt-2" />
                     </div>
 
-                   <div class="mb-4">
+                    <div class="mb-4">
                         <x-input-label for="email" value="Email" />
                         <x-text-input id="email" name="email" type="email" class="block mt-1 w-full" :value="old('email')" required />
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
@@ -48,6 +48,12 @@
                         <x-input-label for="barangay" value="Barangay" />
                         <x-text-input id="barangay" name="barangay" class="block mt-1 w-full" :value="old('barangay')" required />
                         <x-input-error :messages="$errors->get('barangay')" class="mt-2" />
+                    </div>
+
+                    <div class="mb-4">
+                        <x-input-label for="rsbsa_number" value="RSBSA Number (optional)" />
+                        <x-text-input id="rsbsa_number" name="rsbsa_number" class="block mt-1 w-full" :value="old('rsbsa_number')" placeholder="Leave blank if not yet registered with RSBSA" />
+                        <x-input-error :messages="$errors->get('rsbsa_number')" class="mt-2" />
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 mb-4">

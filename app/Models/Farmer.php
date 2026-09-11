@@ -8,7 +8,7 @@ class Farmer extends Model
 {
     protected $fillable = [
         'user_id', 'full_name', 'sex', 'date_of_birth', 'mobile_number',
-        'barangay', 'municipality', 'province',
+        'barangay', 'rsbsa_number', 'municipality', 'province',
         'overall_rating', 'total_reviews', 'completed_orders',
     ];
 

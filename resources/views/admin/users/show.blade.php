@@ -26,7 +26,7 @@
                     </span>
                 </div>
 
-                @if ($user->role === 'farmer' && $user->farmer)
+                                @if ($user->role === 'farmer' && $user->farmer)
                     <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
                         <p>Mobile: <strong>{{ $user->farmer->mobile_number }}</strong></p>
                         <p>Barangay: <strong>{{ $user->farmer->barangay }}, {{ $user->farmer->municipality }}</strong></p>
@@ -34,6 +34,15 @@
                         <p>Date of Birth: <strong>{{ $user->farmer->date_of_birth?->format('M d, Y') ?? '—' }}</strong></p>
                         <p>Overall Rating: <strong>⭐ {{ number_format($user->farmer->overall_rating, 1) }} ({{ $user->farmer->total_reviews }} reviews)</strong></p>
                         <p>Completed Orders: <strong>{{ $user->farmer->completed_orders }}</strong></p>
+                        <p>
+                            RSBSA No:
+                            @if ($user->farmer->rsbsa_number)
+                                <strong>{{ $user->farmer->rsbsa_number }}</strong>
+                                <span class="inline-block text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 ml-1">RSBSA</span>
+                            @else
+                                <span class="text-gray-400">—</span>
+                            @endif
+                        </p>
                     </div>
 
                     <h3 class="font-semibold text-sm text-gray-500 uppercase mb-2 border-t pt-4">Products ({{ $user->farmer->products->count() }})</h3>
