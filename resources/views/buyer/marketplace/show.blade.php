@@ -53,16 +53,29 @@
                         @endif
 
                         <!-- Farmer Info -->
-                        <div class="border rounded-lg p-4 mb-6 bg-gray-50">
+                        <a href="{{ route('farmers.show', $product->farmer) }}"
+                           class="block border rounded-lg p-4 mb-6 bg-gray-50 hover:bg-gray-100 transition">
                             <h3 class="font-semibold text-sm text-gray-500 uppercase mb-2">Sold by</h3>
-                            <p class="font-medium">{{ $product->farmer->full_name }}</p>
-                            <p class="text-sm text-gray-500">{{ $product->farmer->barangay }}, {{ $product->farmer->municipality }}</p>
-                            <p class="text-sm text-gray-500 mt-1">
+                            <div class="flex items-center gap-3">
+                                @if ($product->farmer->user->profile_photo_url)
+                                    <img src="{{ $product->farmer->user->profile_photo_url }}" alt="{{ $product->farmer->full_name }}"
+                                         class="w-10 h-10 rounded-full object-cover border-2 border-accent-500">
+                                @else
+                                    <div class="w-10 h-10 rounded-full bg-primary-50 text-primary-700 border-2 border-accent-500 flex items-center justify-center text-sm font-semibold">
+                                        {{ strtoupper(substr($product->farmer->full_name, 0, 1)) }}
+                                    </div>
+                                @endif
+                                <div>
+                                    <p class="font-medium">{{ $product->farmer->full_name }}</p>
+                                    <p class="text-sm text-gray-500">{{ $product->farmer->barangay }}, {{ $product->farmer->municipality }}</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-2">
                                 ⭐ {{ number_format($product->farmer->overall_rating, 1) }}
                                 ({{ $product->farmer->total_reviews }} {{ Str::plural('review', $product->farmer->total_reviews) }})
                                 · {{ $product->farmer->completed_orders }} completed orders
                             </p>
-                        </div>
+                        </a>
 
                         <h3 class="font-semibold text-sm text-gray-500 uppercase mb-2">Stock</h3>
                         <p class="mb-1">Available Quantity: <strong>{{ $product->available_quantity }} {{ $product->unit_of_measurement }}</strong></p>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
@@ -34,6 +36,7 @@ class GoogleController extends Controller
             if ($user) {
                 // Link the existing account to Google
                 $user->update(['google_id' => $googleUser->getId()]);
+                $this->storeGoogleAvatar($user, $googleUser->getAvatar());
             } else {
                 // Brand new user — but we don't know their role (Farmer or Buyer) yet.
                 // Send them to a short "finish registration" step instead of logging in directly.
@@ -41,8 +44,11 @@ class GoogleController extends Controller
                     'google_id' => $googleUser->getId(),
                     'name' => $googleUser->getName(),
                     'email' => $googleUser->getEmail(),
+                    'avatar' => $googleUser->getAvatar(),
                 ]);
             }
+        } else {
+            $this->storeGoogleAvatar($user, $googleUser->getAvatar());
         }
 
         if (! $user->is_active) {
@@ -65,6 +71,7 @@ class GoogleController extends Controller
             'google_id' => $request->query('google_id'),
             'name' => $request->query('name'),
             'email' => $request->query('email'),
+            'avatar' => $request->query('avatar'),
         ]);
     }
 
@@ -77,6 +84,7 @@ class GoogleController extends Controller
             'google_id' => 'required|string',
             'name' => 'required|string|max:255',
             'email' => 'required|email',
+            'avatar' => 'nullable|string',
             'role' => 'required|in:farmer,buyer',
             'mobile_number' => 'required|string|max:20',
             'barangay' => 'required|string|max:100',
@@ -111,8 +119,40 @@ class GoogleController extends Controller
             ]);
         }
 
+        $this->storeGoogleAvatar($user, $request->avatar);
+
         Auth::login($user);
 
         return redirect()->route('dashboard');
+    }
+
+    /**
+     * Download a user's Google avatar into Supabase storage, once, as their
+     * profile photo — but only if they don't already have one. This means a
+     * user who later uploads their own photo will never have it silently
+     * overwritten by their Google avatar on a future login.
+     */
+    private function storeGoogleAvatar(User $user, ?string $avatarUrl): void
+    {
+        if (! $avatarUrl || $user->profile_photo_path) {
+            return;
+        }
+
+        try {
+            $response = Http::timeout(10)->get($avatarUrl);
+
+            if (! $response->successful()) {
+                return;
+            }
+
+            $path = 'profile-photos/google-' . $user->id . '-' . time() . '.jpg';
+
+            Storage::disk('supabase')->put($path, $response->body());
+
+            $user->update(['profile_photo_path' => $path]);
+        } catch (\Throwable $e) {
+            // If the download fails for any reason, the user simply keeps
+            // the initials fallback — this should never block login.
+        }
     }
 }

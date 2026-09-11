@@ -80,6 +80,10 @@ Route::get('/marketplace/{product}', [\App\Http\Controllers\Buyer\MarketplaceCon
     ->middleware(['auth', 'role:buyer'])
     ->name('marketplace.show');
 
+Route::get('/farmers/{farmer}', [\App\Http\Controllers\Buyer\FarmerProfileController::class, 'show'])
+    ->middleware(['auth', 'role:buyer'])
+    ->name('farmers.show');
+
 Route::get('/cart', [\App\Http\Controllers\Buyer\CartController::class, 'index'])
     ->middleware(['auth', 'role:buyer'])
     ->name('cart.index');
