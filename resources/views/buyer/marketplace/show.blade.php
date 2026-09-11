@@ -65,8 +65,15 @@
                                         {{ strtoupper(substr($product->farmer->full_name, 0, 1)) }}
                                     </div>
                                 @endif
-                                <div>
-                                    <p class="font-medium">{{ $product->farmer->full_name }}</p>
+                                                                <div>
+                                    <p class="font-medium flex items-center gap-2">
+                                        {{ $product->farmer->full_name }}
+                                        @if ($product->farmer->rsbsa_number)
+                                            <span class="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-primary-50 text-primary-700 border border-primary-200">
+                                                ✓ RSBSA
+                                            </span>
+                                        @endif
+                                    </p>
                                     <p class="text-sm text-gray-500">{{ $product->farmer->barangay }}, {{ $product->farmer->municipality }}</p>
                                 </div>
                             </div>

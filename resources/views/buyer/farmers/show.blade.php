@@ -25,8 +25,15 @@
                         </div>
                     @endif
 
-                    <div>
-                        <h3 class="text-xl font-semibold">{{ $farmer->full_name }}</h3>
+                                       <div>
+                        <h3 class="text-xl font-semibold flex items-center gap-2">
+                            {{ $farmer->full_name }}
+                            @if ($farmer->rsbsa_number)
+                                <span class="inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full bg-primary-50 text-primary-700 border border-primary-200">
+                                    ✓ RSBSA Registered
+                                </span>
+                            @endif
+                        </h3>
                         <p class="text-sm text-gray-500">
                             {{ $farmer->barangay }}@if($farmer->municipality), {{ $farmer->municipality }}@endif
                         </p>
