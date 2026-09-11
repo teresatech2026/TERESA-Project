@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -35,6 +36,45 @@ class ProfileController extends Controller
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    }
+
+    /**
+     * Update the user's profile photo.
+     */
+    public function updatePhoto(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'photo' => ['required', 'image', 'max:4096'],
+        ]);
+
+        $user = $request->user();
+
+        // Remove the old photo from storage before saving the new one,
+        // so replacing a photo doesn't leave orphaned files behind.
+        if ($user->profile_photo_path) {
+            Storage::disk('supabase')->delete($user->profile_photo_path);
+        }
+
+        $path = $request->file('photo')->store('profile-photos', 'supabase');
+
+        $user->update(['profile_photo_path' => $path]);
+
+        return Redirect::route('profile.edit')->with('status', 'photo-updated');
+    }
+
+    /**
+     * Remove the user's profile photo.
+     */
+    public function destroyPhoto(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        if ($user->profile_photo_path) {
+            Storage::disk('supabase')->delete($user->profile_photo_path);
+            $user->update(['profile_photo_path' => null]);
+        }
+
+        return Redirect::route('profile.edit')->with('status', 'photo-removed');
     }
 
     /**
