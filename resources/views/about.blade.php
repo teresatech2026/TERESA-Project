@@ -1,4 +1,8 @@
-<x-app-layout>
+    <style>
+        .logo-spin-wrap { perspective: 600px; }
+        .logo-spin { transition: transform 0.7s ease; }
+        .logo-spin-wrap:hover .logo-spin { transform: rotateY(360deg); }
+    </style>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('About TERESA') }}
@@ -12,10 +16,8 @@
 
         <div class="relative max-w-3xl mx-auto px-6 py-16">
             <div class="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl shadow-primary-900/30 px-8 py-12 text-center">
-                <div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center mx-auto mb-5">
-                    <svg class="w-8 h-8 text-accent-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c-3 3-5 6-5 9a5 5 0 0010 0c0-3-2-6-5-9z" />
-                    </svg>
+                                <div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center mx-auto mb-5 logo-spin-wrap">
+                    <img src="{{ asset('GROUP3-LOGO.png') }}" alt="TERESA logo" class="w-11 h-11 object-contain logo-spin">
                 </div>
                 <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4">Technology-Enabled Resource for<br>Economic and Sales Advancement</h1>
                 <p class="text-primary-100 text-lg max-w-2xl mx-auto">
