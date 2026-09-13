@@ -5,18 +5,23 @@
         </h2>
     </x-slot>
 
-    <!-- Hero Banner -->
-    <div class="bg-primary-700">
-        <div class="max-w-5xl mx-auto px-6 py-16 text-center">
-            <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-5">
-                <svg class="w-8 h-8 text-accent-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c-3 3-5 6-5 9a5 5 0 0010 0c0-3-2-6-5-9z" />
-                </svg>
+        <!-- Hero Banner -->
+    <div class="relative overflow-hidden bg-gradient-to-br from-primary-900 via-primary-700 to-primary-500">
+        <div class="absolute -top-10 -left-10 w-64 h-64 bg-accent-400/30 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-16 -right-10 w-72 h-72 bg-primary-300/20 rounded-full blur-3xl"></div>
+
+        <div class="relative max-w-3xl mx-auto px-6 py-16">
+            <div class="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl shadow-primary-900/30 px-8 py-12 text-center">
+                <div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center mx-auto mb-5">
+                    <svg class="w-8 h-8 text-accent-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c-3 3-5 6-5 9a5 5 0 0010 0c0-3-2-6-5-9z" />
+                    </svg>
+                </div>
+                <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4">Technology-Enabled Resource for<br>Economic and Sales Advancement</h1>
+                <p class="text-primary-100 text-lg max-w-2xl mx-auto">
+                    Connecting farmers and buyers in San Jose, Camarines Sur — directly, fairly, and transparently.
+                </p>
             </div>
-            <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4">Technology-Enabled Resource for<br>Economic and Sales Advancement</h1>
-            <p class="text-primary-100 text-lg max-w-2xl mx-auto">
-                Connecting farmers and buyers in San Jose, Camarines Sur — directly, fairly, and transparently.
-            </p>
         </div>
     </div>
 
@@ -188,12 +193,17 @@
                 </div>
             </div>
 
-            <!-- Our Goal -->
-            <div class="bg-primary-700 rounded-lg p-10 text-center">
-                <h3 class="text-lg font-bold text-white mb-3">Our Goal</h3>
-                <p class="text-primary-50 text-lg max-w-2xl mx-auto">
-                    To empower farmers, connect communities, and create better opportunities through accessible digital agricultural services.
-                </p>
+                        <!-- Our Goal -->
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-900 via-primary-700 to-primary-500">
+                <div class="absolute -top-8 right-10 w-48 h-48 bg-accent-400/25 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-10 -left-8 w-56 h-56 bg-primary-300/20 rounded-full blur-3xl"></div>
+
+                <div class="relative bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl m-2 p-10 text-center shadow-inner">
+                    <h3 class="text-lg font-bold text-white mb-3">Our Goal</h3>
+                    <p class="text-primary-50 text-lg max-w-2xl mx-auto">
+                        To empower farmers, connect communities, and create better opportunities through accessible digital agricultural services.
+                    </p>
+                </div>
             </div>
 
         </div>
