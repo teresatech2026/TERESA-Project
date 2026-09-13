@@ -15,8 +15,8 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 relative bg-cover bg-center"
-             style="background-image: linear-gradient(135deg, rgba(27,94,32,0.75), rgba(255,193,7,0.55)), url('{{ asset('riceField.jpg') }}');
+        <div style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1.5rem; background: linear-gradient(135deg, #1B5E20 0%, #408A49 45%, #FFC107 100%);">
+
             <div>
                 <a href="/">
                     <img src="{{ asset('GROUP3-LOGO.png') }}" class="w-24 h-24 rounded-full shadow-lg" alt="TERESA">

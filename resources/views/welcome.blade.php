@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.5/cdn.min.js"></script>
     <style>
         :root{
             --emerald:#1B5E20;
@@ -97,7 +98,7 @@
         .btn-primary{
             background:var(--emerald); color:var(--paper); padding:14px 28px; border-radius:9px;
             font-weight:700; font-size:15px; border:2px solid transparent; transition:border-color .15s, transform .15s;
-            display:inline-flex; align-items:center; gap:8px;
+            display:inline-flex; align-items:center; gap:8px; cursor:pointer;
         }
         .btn-primary:hover{border-color:var(--gold); transform:translateY(-1px);}
         .btn-secondary{
@@ -232,9 +233,29 @@
             .trust-line{gap:16px;}
         }
         :focus-visible{outline:2.5px solid var(--gold-dark); outline-offset:2px;}
+
+        /* ---------- Auth modal ---------- */
+        [x-cloak]{display:none !important;}
+        .auth-field{margin-bottom:16px; text-align:left;}
+        .auth-field label{display:block; font-size:13px; font-weight:600; color:var(--soil); margin-bottom:6px;}
+        .auth-field input[type=text], .auth-field input[type=email], .auth-field input[type=password]{
+            width:100%; padding:10px 12px; border:1.5px solid var(--line); border-radius:8px;
+            font-size:14px; font-family:inherit; color:var(--ink);
+        }
+        .auth-field input:focus{outline:none; border-color:var(--emerald);}
+        .auth-error{color:#b3261e; font-size:12.5px; margin-top:4px;}
+        .auth-pass-wrap{position:relative;}
+        .auth-pass-wrap input{padding-right:38px !important;}
+        .auth-pass-wrap button{position:absolute; top:50%; right:10px; transform:translateY(-50%); background:none; border:none; cursor:pointer; padding:0; line-height:0;}
+        .auth-submit{width:100%; justify-content:center; margin-top:6px; border:none;}
+        .auth-divider{display:flex; align-items:center; gap:10px; margin:20px 0; font-size:12px; color:var(--ink-soft); text-transform:uppercase;}
+        .auth-divider::before, .auth-divider::after{content:''; flex:1; height:1px; background:var(--line);}
+        .auth-google-btn{display:flex; align-items:center; justify-content:center; gap:10px; width:100%; padding:10px; border:1.5px solid var(--line); border-radius:8px; font-size:14px; font-weight:600; color:var(--soil); background:#fff; cursor:pointer;}
+        .auth-google-btn:hover{background:var(--paper-dim);}
+        .auth-remember{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-soft); margin-bottom:16px; text-align:left;}
     </style>
 </head>
-<body>
+<body x-data="{ authModalOpen: {{ $errors->any() ? 'true' : 'false' }}, authModalView: '{{ old('mobile_number') !== null ? 'register' : 'login' }}' }">
 
     <header>
         <div class="header-inner">
@@ -247,9 +268,9 @@
                     @auth
                         <a href="{{ url('/dashboard') }}" class="btn-register">Go to Dashboard</a>
                     @else
-                        <a href="{{ route('login') }}">Log in</a>
+                        <a href="{{ route('login') }}" @click.prevent="authModalView = 'login'; authModalOpen = true">Log in</a>
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="btn-register">Register</a>
+                            <a href="{{ route('register') }}" class="btn-register" @click.prevent="authModalView = 'register'; authModalOpen = true">Register</a>
                         @endif
                     @endauth
                 @endif
@@ -264,8 +285,8 @@
                 <h1>Fair prices,<br><em>straight from the farm.</em></h1>
                 <p class="lede">TERESA connects San Jose's farmers directly with buyers — real listings, transparent pricing, and room to negotiate. No middlemen guessing what your harvest is worth.</p>
                 <div class="hero-ctas">
-                    <a href="{{ route('register') }}" class="btn-primary">Create your account →</a>
-                    <a href="{{ route('login') }}" class="btn-secondary">I already have one</a>
+                    <a href="{{ route('register') }}" class="btn-primary" @click.prevent="authModalView = 'register'; authModalOpen = true">Create your account →</a>
+                    <a href="{{ route('login') }}" class="btn-secondary" @click.prevent="authModalView = 'login'; authModalOpen = true">I already have one</a>
                 </div>
             </div>
 
@@ -392,8 +413,8 @@
             <h2 class="reveal">Whether you're growing it or buying it, TERESA gets you a fair deal.</h2>
             <p class="reveal">Free to join. Takes less than two minutes.</p>
             <div class="cta-buttons reveal">
-                <a href="{{ route('register') }}" class="btn-primary">Register now →</a>
-                <a href="{{ route('login') }}" class="btn-secondary">Log in</a>
+                <a href="{{ route('register') }}" class="btn-primary" @click.prevent="authModalView = 'register'; authModalOpen = true">Register now →</a>
+                <a href="{{ route('login') }}" class="btn-secondary" @click.prevent="authModalView = 'login'; authModalOpen = true">Log in</a>
             </div>
         </div>
     </section>
@@ -406,6 +427,40 @@
             <p>Technology-Enabled Resource for Economic and Sales Advancement — San Jose, Camarines Sur</p>
         </div>
     </footer>
+
+    <div x-show="authModalOpen" x-cloak
+                  style="position:fixed; inset:0; z-index:100; display:grid; place-items:center; padding:20px;">>
+
+        <div @click="authModalOpen = false"
+             style="position:absolute; inset:0; background:rgba(18,63,21,0.45); backdrop-filter:blur(6px);">
+        </div>
+
+        <div @click.outside="authModalOpen = false"
+             style="position:relative; background:var(--paper); border-radius:16px; max-width:420px; width:100%; padding:36px; box-shadow:0 30px 60px -20px rgba(18,63,21,0.4); max-height:90vh; overflow-y:auto; text-align:center;">
+
+            <button @click="authModalOpen = false" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:22px; color:var(--ink-soft); cursor:pointer; line-height:1;">&times;</button>
+
+            <div x-show="authModalView === 'login'">
+                <h2 style="font-size:26px; color:var(--emerald-dark); margin-bottom:6px;">Welcome back</h2>
+                <p style="color:var(--ink-soft); font-size:14px; margin-bottom:24px;">Log in to your TERESA account.</p>
+                @include('auth.partials.login-form-plain')
+                <p style="margin-top:20px; font-size:13.5px; color:var(--ink-soft);">
+                    Don't have an account?
+                    <a href="{{ route('register') }}" style="color:var(--emerald-dark); font-weight:600; text-decoration:underline;" @click.prevent="authModalView = 'register'">Register</a>
+                </p>
+            </div>
+
+            <div x-show="authModalView === 'register'" x-cloak>
+                <h2 style="font-size:26px; color:var(--emerald-dark); margin-bottom:6px;">Create your account</h2>
+                <p style="color:var(--ink-soft); font-size:14px; margin-bottom:24px;">Join TERESA as a buyer in just a minute.</p>
+                @include('auth.partials.register-form-plain')
+                <p style="margin-top:20px; font-size:13.5px; color:var(--ink-soft);">
+                    Already have an account?
+                    <a href="{{ route('login') }}" style="color:var(--emerald-dark); font-weight:600; text-decoration:underline;" @click.prevent="authModalView = 'login'">Log in</a>
+                </p>
+            </div>
+        </div>
+    </div>
 
     <script>
         const revealEls = document.querySelectorAll('.reveal');
