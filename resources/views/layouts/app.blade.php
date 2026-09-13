@@ -27,10 +27,21 @@
                 </header>
             @endisset
 
-            <!-- Page Content -->
+                       <!-- Page Content -->
             <main>
                 {{ $slot }}
             </main>
+
+            <footer class="mt-auto border-t border-gray-200 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+                    <p class="text-sm text-gray-500">
+                        &copy; {{ date('Y') }} TERESA — San Jose, Camarines Sur
+                    </p>
+                    <a href="{{ route('about') }}" class="text-sm font-medium text-primary-600 hover:underline">
+                        About TERESA
+                    </a>
+                </div>
+            </footer>
         </div>
     </body>
 </html>

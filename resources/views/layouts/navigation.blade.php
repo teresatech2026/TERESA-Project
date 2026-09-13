@@ -44,8 +44,11 @@
         </x-nav-link>
     @endif
 
-    <x-nav-link :href="route('market-analytics.index')" :active="request()->routeIs('market-analytics.*')">
+        <x-nav-link :href="route('market-analytics.index')" :active="request()->routeIs('market-analytics.*')">
         {{ __('Market Analytics') }}
+    </x-nav-link>
+    <x-nav-link :href="route('about')" :active="request()->routeIs('about')">
+        {{ __('About') }}
     </x-nav-link>
 </div>
 
@@ -195,8 +198,11 @@
             </x-responsive-nav-link>
         @endif
 
-        <x-responsive-nav-link :href="route('market-analytics.index')" :active="request()->routeIs('market-analytics.*')">
+                <x-responsive-nav-link :href="route('market-analytics.index')" :active="request()->routeIs('market-analytics.*')">
             {{ __('Market Analytics') }}
+        </x-responsive-nav-link>
+        <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')">
+            {{ __('About') }}
         </x-responsive-nav-link>
 
         @php $unreadNotifMobile = auth()->user()->notifications()->where('is_read', false)->where('type', '!=', 'new_message')->count(); @endphp

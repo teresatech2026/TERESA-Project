@@ -7,6 +7,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/about', function () {
+    return view('about');
+})->middleware(['auth'])->name('about');
 
 Route::get('/dashboard', function () {
     return match (auth()->user()->role) {
