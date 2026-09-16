@@ -263,7 +263,7 @@
     <img src="{{ asset('GROUP3-LOGO.png') }}" alt="TERESA logo" style="width: 80px;px;height:80px;border-radius:8px;object-fit:contain;">
     <div>TERESA<small>San Jose, Camarines Sur</small></div>
 </div>
-            <nav class="auth-links">
+                                   <nav class="auth-links">
                 @if (Route::has('login'))
                     @auth
                         <a href="{{ url('/dashboard') }}" class="btn-register">Go to Dashboard</a>
@@ -419,12 +419,13 @@
         </div>
     </section>
 
-    <footer>
+        <footer>
         <div class="wrap">
             <div class="brand">
               <img src="{{ asset('GROUP3-LOGO.png') }}" alt="TERESA logo" style="width:70px;height: 70px;px;border-radius:6px;object-fit:contain;">
             </div>
             <p>Technology-Enabled Resource for Economic and Sales Advancement — San Jose, Camarines Sur</p>
+            <a href="{{ route('about') }}" style="font-size:13px; color:var(--soil); text-decoration:underline;">About</a>
         </div>
     </footer>
 
