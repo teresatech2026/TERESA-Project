@@ -283,7 +283,7 @@
             <div>
                 <span class="eyebrow"><span class="dot"></span> Municipal Agriculture Office · San Jose</span>
                 <h1>Fair prices,<br><em>straight from the farm.</em></h1>
-                <p class="lede">TERESA connects San Jose's farmers directly with buyers — real listings, transparent pricing, and room to negotiate. No middlemen guessing what your harvest is worth.</p>
+                <p class="lede">TERESA connects San Jose's farmers directly with buyers — real listings, transparent pricing, and room to negotiate.</p>
                 <div class="hero-ctas">
                     <a href="{{ route('register') }}" class="btn-primary" @click.prevent="authModalView = 'register'; authModalOpen = true">Create your account →</a>
                     <a href="{{ route('login') }}" class="btn-secondary" @click.prevent="authModalView = 'login'; authModalOpen = true">I already have one</a>
