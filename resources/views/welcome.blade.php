@@ -419,65 +419,69 @@
         </div>
     </section>
 
-                    <footer class="mt-auto bg-white border-t border-gray-200">
-                <!-- Harvest-gold accent line -->
-                <div class="h-1 bg-gradient-to-r from-primary-600 via-accent-500 to-primary-600"></div>
+                    <footer class="tf-footer">
+    <style>
+        .tf-footer { background: #FAF7F0; border-top: 1px solid #E5DCC8; font-family: inherit; }
+        .tf-footer .tf-accent { height: 4px; background: linear-gradient(to right, #1B5E20, #FFC107, #1B5E20); }
+        .tf-footer .tf-inner { max-width: 1120px; margin: 0 auto; padding: 32px 16px 20px; text-align: center; }
+        .tf-footer .tf-small { font-size: 14px; color: #6B6B5E; margin: 0; }
+        .tf-footer .tf-office { font-size: 16px; font-weight: 600; color: #1B5E20; margin: 2px 0; }
+        .tf-footer .tf-contacts { margin-top: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 32px; font-size: 14px; color: #4A4A40; }
+        .tf-footer .tf-item { display: inline-flex; align-items: center; gap: 8px; color: inherit; text-decoration: none; }
+        .tf-footer a.tf-item:hover { color: #1B5E20; }
+        .tf-footer .tf-item svg { width: 16px; height: 16px; flex-shrink: 0; color: #E0A800; }
+        .tf-footer .tf-bottom { margin-top: 24px; padding-top: 16px; border-top: 1px solid #EDE6D6; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 16px; }
+        .tf-footer .tf-copy { font-size: 12px; color: #8A8A7C; margin: 0; }
+        .tf-footer .tf-about { font-size: 13px; font-weight: 600; color: #1B5E20; text-decoration: none; }
+        .tf-footer .tf-about:hover { text-decoration: underline; }
+    </style>
 
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+    <div class="tf-accent"></div>
 
-                    <!-- Partnership line -->
-                    <p class="text-sm text-gray-500">In partnership with the</p>
-                    <p class="text-base font-semibold text-primary-700">
-                        Office of the Municipal Agriculturist
-                    </p>
-                    <p class="text-sm text-gray-500">San Jose, Camarines Sur</p>
+    <div class="tf-inner">
+        <p class="tf-small">In partnership with the</p>
+        <p class="tf-office">Office of the Municipal Agriculturist</p>
+        <p class="tf-small">San Jose, Camarines Sur</p>
 
-                    <!-- Contact details -->
-                    <div class="mt-5 flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-gray-600">
+        <div class="tf-contacts">
+            <span class="tf-item">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Municipal Hall, San Jose, Camarines Sur
+            </span>
 
-                        <!-- Address -->
-                        <span class="inline-flex items-center gap-2">
-                            <svg class="h-4 w-4 text-accent-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            Municipal Hall, San Jose, Camarines Sur
-                        </span>
+            <!-- TODO: replace XXX with real number -->
+            <span class="tf-item">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                XXX
+            </span>
 
-                        <!-- Phone (TODO: replace XXX with real number) -->
-                        <span class="inline-flex items-center gap-2">
-                            <svg class="h-4 w-4 text-accent-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                            </svg>
-                            XXX
-                        </span>
+            <!-- TODO: replace sample email (2 places) -->
+            <a href="mailto:mao.sanjose@example.com" class="tf-item">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                mao.sanjose@example.com
+            </a>
 
-                        <!-- Email (TODO: replace sample email with the real one) -->
-                        <a href="mailto:mao.sanjose@example.com" class="inline-flex items-center gap-2 hover:text-primary-700">
-                            <svg class="h-4 w-4 text-accent-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                            mao.sanjose@example.com
-                        </a>
+            <span class="tf-item">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Monday–Friday, 8:00 AM – 5:00 PM
+            </span>
+        </div>
 
-                        <!-- Office hours -->
-                        <span class="inline-flex items-center gap-2">
-                            <svg class="h-4 w-4 text-accent-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            Monday–Friday, 8:00 AM – 5:00 PM
-                        </span>
-                    </div>
-
-                    <!-- Divider + copyright -->
-                    <div class="mt-6 pt-4 border-t border-gray-100">
-                        <p class="text-xs text-gray-400">
-                            &copy; {{ date('Y') }} TERESA — San Jose, Camarines Sur. All rights reserved.
-                        </p>
-                    </div>
-                </div>
-            </footer>
-
+        <div class="tf-bottom">
+            <p class="tf-copy">&copy; {{ date('Y') }} TERESA — San Jose, Camarines Sur. All rights reserved.</p>
+            <a href="{{ route('about') }}" class="tf-about">About TERESA</a>
+        </div>
+    </div>
+</footer>
     <div x-show="authModalOpen" x-cloak
                   style="position:fixed; inset:0; z-index:100; display:grid; place-items:center; padding:20px;">>
 
