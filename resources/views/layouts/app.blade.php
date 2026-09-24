@@ -37,9 +37,7 @@
                     <p class="text-sm text-gray-500">
                         &copy; {{ date('Y') }} TERESA — San Jose, Camarines Sur
                     </p>
-                    <a href="{{ route('about') }}" class="text-sm font-medium text-primary-600 hover:underline">
-                        About TERESA
-                    </a>
+                    
                 </div>
             </footer>
         </div>
