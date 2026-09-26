@@ -203,21 +203,15 @@
         .trust-strip .badge span{display:block; font-size:12px; color:#9fc0a1; font-family:'IBM Plex Mono',monospace;}
         .trust-strip .badge strong{display:block; font-size:15px; font-family:'Zilla Slab',serif;}
 
-        /* ---------- CTA band ---------- */
-        .cta-band{
+               .cta-band{
             background:var(--paper); text-align:center; padding:100px 0;
-            border-bottom:1px solid var(--line);
-        }
+        }        
+       
         .cta-band h2{font-size:38px; color:var(--emerald-dark); margin-bottom:16px; max-width:640px; margin-left:auto; margin-right:auto;}
         .cta-band p{color:var(--ink-soft); font-size:16px; margin-bottom:32px;}
         .cta-buttons{display:flex; gap:14px; justify-content:center;}
 
-        /* ---------- Footer ---------- */
-        footer{padding:36px 0; background:var(--paper-dim);}
-        footer .wrap{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;}
-        footer p{font-size:13px; color:var(--ink-soft);}
-        footer .brand{font-size:15px;}
-
+    
         /* ---------- Reveal on scroll ---------- */
         .reveal{opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease;}
         .reveal.in{opacity:1; transform:translateY(0);}
@@ -255,7 +249,7 @@
         .auth-remember{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-soft); margin-bottom:16px; text-align:left;}
     </style>
 </head>
-<body x-data="{ authModalOpen: {{ $errors->any() ? 'true' : 'false' }}, authModalView: '{{ old('mobile_number') !== null ? 'register' : 'login' }}' }">
+<body x-data="{ authModalOpen: {{ ($errors->any() || request()->has('auth')) ? 'true' : 'false' }}, authModalView: '{{ (old('mobile_number') !== null || request('auth') === 'register') ? 'register' : 'login' }}' }">
 
     <header>
         <div class="header-inner">
@@ -421,7 +415,7 @@
 
                     <footer class="tf-footer">
     <style>
-        .tf-footer { background: #FAF7F0; border-top: 1px solid #E5DCC8; font-family: inherit; }
+             .tf-footer { background: #FAF7F0; font-family: inherit; }
         .tf-footer .tf-accent { height: 4px; background: linear-gradient(to right, #1B5E20, #FFC107, #1B5E20); }
         .tf-footer .tf-inner { max-width: 1120px; margin: 0 auto; padding: 32px 16px 20px; text-align: center; }
         .tf-footer .tf-small { font-size: 14px; color: #6B6B5E; margin: 0; }

@@ -20,19 +20,75 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-                    <!-- Images -->
-                    <div x-data="{ activeImage: '{{ $product->images->firstWhere('is_primary', true)?->image_path ?? $product->images->first()?->image_path }}' }">
-                        @if ($product->images->isNotEmpty())
-                            <img :src="'{{ Storage::disk('supabase')->url('') }}' + activeImage"
-                                 class="w-full h-80 object-cover rounded-lg mb-3">
+                    <!-- Images (swipeable carousel) -->
+                    @php
+                        // Primary image first, then by sort order
+                        $galleryImages = $product->images
+                            ->sortBy([['is_primary', 'desc'], ['sort_order', 'asc']])
+                            ->values();
+                    @endphp
 
-                            @if ($product->images->count() > 1)
-                                <div class="flex gap-2 overflow-x-auto pb-2">
-                                    @foreach ($product->images as $image)
+                    <style>
+                        .gallery-track::-webkit-scrollbar { display: none; }
+                    </style>
+
+                    <div x-data="{
+                            current: 0,
+                            total: {{ $galleryImages->count() }},
+                            go(i) {
+                                i = Math.max(0, Math.min(this.total - 1, i));
+                                this.$refs.track.scrollTo({ left: i * this.$refs.track.clientWidth, behavior: 'smooth' });
+                            },
+                            sync() {
+                                this.current = Math.round(this.$refs.track.scrollLeft / this.$refs.track.clientWidth);
+                            }
+                         }">
+                        @if ($galleryImages->isNotEmpty())
+                            <div class="relative mb-3">
+                                <!-- Swipeable track -->
+                                <div x-ref="track" @scroll.debounce.50ms="sync()"
+                                     class="gallery-track flex overflow-x-auto rounded-lg"
+                                     style="scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch;">
+                                    @foreach ($galleryImages as $image)
                                         <img src="{{ Storage::disk('supabase')->url($image->image_path) }}"
-                                             @click="activeImage = '{{ $image->image_path }}'"
+                                             alt="{{ $product->product_name }} photo {{ $loop->iteration }}"
+                                             draggable="false"
+                                             class="w-full h-80 object-cover flex-shrink-0"
+                                             style="scroll-snap-align: center;">
+                                    @endforeach
+                                </div>
+
+                                @if ($galleryImages->count() > 1)
+                                    <!-- Counter (e.g. 1/3) -->
+                                    <span x-text="(current + 1) + '/' + total"
+                                          class="absolute text-white text-xs font-semibold px-2.5 py-1 rounded-full"
+                                          style="bottom: 12px; right: 12px; background: rgba(0,0,0,0.55);"></span>
+
+                                    <!-- Arrows (desktop only) -->
+                                    <button type="button" @click="go(current - 1)" x-show="current > 0"
+                                            aria-label="Previous photo"
+                                            class="absolute hidden sm:flex items-center justify-center rounded-full bg-white shadow text-gray-700 hover:text-primary-600"
+                                            style="left: 10px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px;">
+                                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+                                    </button>
+                                    <button type="button" @click="go(current + 1)" x-show="current < total - 1"
+                                            aria-label="Next photo"
+                                            class="absolute hidden sm:flex items-center justify-center rounded-full bg-white shadow text-gray-700 hover:text-primary-600"
+                                            style="right: 10px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px;">
+                                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                                    </button>
+                                @endif
+                            </div>
+
+                            @if ($galleryImages->count() > 1)
+                                <!-- Thumbnails -->
+                                <div class="flex gap-2 overflow-x-auto pb-2">
+                                    @foreach ($galleryImages as $image)
+                                        <img src="{{ Storage::disk('supabase')->url($image->image_path) }}"
+                                             alt="Thumbnail {{ $loop->iteration }}"
+                                             @click="go({{ $loop->index }})"
                                              class="w-20 h-20 object-cover rounded border-2 flex-shrink-0 cursor-pointer transition"
-                                             :class="activeImage === '{{ $image->image_path }}' ? 'border-primary-600' : 'border-transparent hover:border-gray-300'">
+                                             :class="current === {{ $loop->index }} ? 'border-accent-500' : 'border-transparent hover:border-gray-300'">
                                     @endforeach
                                 </div>
                             @endif
@@ -65,7 +121,7 @@
                                         {{ strtoupper(substr($product->farmer->full_name, 0, 1)) }}
                                     </div>
                                 @endif
-                                                                <div>
+                                <div>
                                     <p class="font-medium flex items-center gap-2">
                                         {{ $product->farmer->full_name }}
                                         @if ($product->farmer->rsbsa_number)
