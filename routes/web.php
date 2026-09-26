@@ -147,9 +147,9 @@ Route::post('/orders/{order}/review', [\App\Http\Controllers\Buyer\ReviewControl
     ->middleware(['auth', 'role:buyer'])
     ->name('orders.review');
 
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-})->middleware(['auth', 'role:admin'])->name('admin.dashboard');
+Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.dashboard');
 
 Route::get('/admin/users', [\App\Http\Controllers\Admin\UserManagementController::class, 'index'])
     ->middleware(['auth', 'role:admin'])
