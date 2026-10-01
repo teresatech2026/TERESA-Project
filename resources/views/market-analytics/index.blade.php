@@ -81,7 +81,7 @@
                     @endforelse
                 </div>
 
-                <div class="bg-white shadow-sm sm:rounded-lg p-6">
+                                <div class="bg-white shadow-sm sm:rounded-lg p-6">
                     <h3 class="font-semibold text-lg mb-4">Monthly Demand Trend</h3>
                     <p class="text-xs text-gray-400 mb-2">Total quantity ordered per month (last 6 months)</p>
                     @if ($monthlyTrend->isEmpty())
@@ -89,6 +89,24 @@
                     @else
                         <canvas id="monthlyTrendChart" height="200"></canvas>
                     @endif
+
+                    <!-- System Insight (generated from TERESA order records) -->
+                    <div class="mt-5 rounded-lg bg-primary-50 border-l-4 border-accent-500 p-4">
+                        <p class="flex items-center gap-2 text-sm font-semibold text-primary-700 mb-2">
+                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                            System Insight
+                        </p>
+                        <ul class="space-y-2">
+                            @foreach ($trendInsights as $insight)
+                                <li class="text-sm text-gray-700 leading-relaxed">{{ $insight }}</li>
+                            @endforeach
+                        </ul>
+                        <p class="text-xs text-gray-400 mt-3">
+                            Generated automatically from TERESA order records. Quantities combine all units of measure (kg, pieces, etc.).
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -182,7 +200,7 @@
             new Chart(document.getElementById('monthlyTrendChart'), {
                 type: 'line',
                 data: {
-                    labels: {!! json_encode($monthlyTrend->map(fn($t) => \Carbon\Carbon::createFromFormat('Y-m', $t->month)->format('M Y'))) !!},
+                                       labels: {!! json_encode($monthlyTrend->map(fn($t) => \Carbon\Carbon::createFromFormat('Y-m-d', $t->month . '-01')->format('M Y'))) !!},
                     datasets: [{
                         label: 'Units Ordered',
                         data: {!! json_encode($monthlyTrend->pluck('total_quantity')) !!},
