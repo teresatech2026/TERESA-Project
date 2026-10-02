@@ -23,10 +23,16 @@
             <x-input-error :messages="$errors->get('mobile_number')" class="mt-2" />
         </div>
 
-        <!-- Barangay -->
+                <!-- Barangay -->
         <div class="mt-4">
             <x-input-label for="barangay" :value="__('Barangay')" />
-            <x-text-input id="barangay" class="block mt-1 w-full" type="text" name="barangay" :value="old('barangay')" required />
+            <select id="barangay" name="barangay" required
+                class="mt-1 block w-full border-gray-300 focus:border-primary-500 focus:ring-primary-500 rounded-md shadow-sm">
+                <option value="">-- Select Barangay --</option>
+                @foreach (['Adiangao','Bagacay','Bahay','Boclod','Calalahan','Calawit','Camagong','Catalotoan','Danlog','Del Carmen (Pob.)','Dolo','Kinalansan','Mampirao','Manzana','Minoro','Palale','Ponglon','Pugay','Sabang','Salogon','San Antonio (Pob.)','San Juan (Pob.)','San Vicente (Pob.)','Santa Cruz (Pob.)','Soledad (Pob.)','Tagas','Tambangan','Telegrafo','Tominawog'] as $brgy)
+                    <option value="{{ $brgy }}" {{ old('barangay') == $brgy ? 'selected' : '' }}>{{ $brgy }}</option>
+                @endforeach
+            </select>
             <x-input-error :messages="$errors->get('barangay')" class="mt-2" />
         </div>
 

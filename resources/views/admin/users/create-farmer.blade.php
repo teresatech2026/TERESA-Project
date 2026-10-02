@@ -5,6 +5,27 @@
         </h2>
     </x-slot>
 
+    <style>
+        .auth-custom-select-btn{
+            width:100%; padding:10px 36px 10px 12px; border:1.5px solid #dcd4c0; border-radius:8px;
+            font-size:14px; font-family:inherit; color:#1F2A1F; background:#fff;
+            display:flex; align-items:center; justify-content:space-between;
+            cursor:pointer; text-align:left;
+        }
+        .auth-custom-select-btn:hover{border-color:#1B5E20;}
+        .auth-custom-select-btn.is-open{border-color:#1B5E20;}
+        .auth-custom-select-list{
+            position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:50;
+            background:#fff; border:1.5px solid #dcd4c0; border-radius:8px;
+            max-height:220px; overflow-y:auto; box-shadow:0 10px 30px -10px rgba(18,63,21,0.3);
+        }
+        .auth-custom-select-option{
+            padding:9px 12px; font-size:13.5px; color:#1F2A1F; cursor:pointer;
+        }
+        .auth-custom-select-option:hover{background:#1B5E20; color:#fff;}
+        .auth-custom-select-option.is-selected{background:#F2EDE0; font-weight:600; color:#123f15;}
+    </style>
+
     <div class="py-12">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-sm sm:rounded-lg p-6">
@@ -44,9 +65,37 @@
                         <x-input-error :messages="$errors->get('mobile_number')" class="mt-2" />
                     </div>
 
-                    <div class="mb-4">
+                    <div class="mb-4"
+                         x-data="{
+                            open: false,
+                            selected: '{{ old('barangay', '') }}',
+                            barangays: ['Adiangao','Bagacay','Bahay','Boclod','Calalahan','Calawit','Camagong','Catalotoan','Danlog','Del Carmen (Pob.)','Dolo','Kinalansan','Mampirao','Manzana','Minoro','Palale','Ponglon','Pugay','Sabang','Salogon','San Antonio (Pob.)','San Juan (Pob.)','San Vicente (Pob.)','Santa Cruz (Pob.)','Soledad (Pob.)','Tagas','Tambangan','Telegrafo','Tominawog']
+                         }"
+                         @click.outside="open = false"
+                         style="position:relative;">
                         <x-input-label for="barangay" value="Barangay" />
-                        <x-text-input id="barangay" name="barangay" class="block mt-1 w-full" :value="old('barangay')" required />
+                        <input type="hidden" name="barangay" :value="selected" required>
+                        <button type="button" id="barangay" @click="open = !open" class="auth-custom-select-btn mt-1" :class="{ 'is-open': open }">
+                            <span x-text="selected || '-- Select Barangay --'" :style="selected ? 'color:#1F2A1F;' : 'color:#9a9a8c;'"></span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B5E20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" :style="open ? 'transform:rotate(180deg);' : ''" style="transition:transform .15s; flex-shrink:0;">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div x-show="open" x-cloak class="auth-custom-select-list">
+                            <div class="auth-custom-select-option"
+                                 :class="{ 'is-selected': selected === '' }"
+                                 @click="selected = ''; open = false"
+                                 style="color:#9a9a8c;">
+                                -- Select Barangay --
+                            </div>
+                            <template x-for="brgy in barangays" :key="brgy">
+                                <div class="auth-custom-select-option"
+                                     :class="{ 'is-selected': selected === brgy }"
+                                     @click="selected = brgy; open = false"
+                                     x-text="brgy">
+                                </div>
+                            </template>
+                        </div>
                         <x-input-error :messages="$errors->get('barangay')" class="mt-2" />
                     </div>
 
@@ -57,13 +106,20 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div>
+                                               <div x-data="{ open: false, selected: '{{ old('sex', '') }}' }" @click.outside="open = false" style="position:relative;">
                             <x-input-label for="sex" value="Sex" />
-                            <select id="sex" name="sex" class="mt-1 block w-full border-gray-300 focus:border-primary-500 focus:ring-primary-500 rounded-md shadow-sm">
-                                <option value="">-- Select --</option>
-                                <option value="Male" {{ old('sex') == 'Male' ? 'selected' : '' }}>Male</option>
-                                <option value="Female" {{ old('sex') == 'Female' ? 'selected' : '' }}>Female</option>
-                            </select>
+                            <input type="hidden" name="sex" :value="selected">
+                            <button type="button" id="sex" @click="open = !open" class="auth-custom-select-btn mt-1" :class="{ 'is-open': open }">
+                                <span x-text="selected || '-- Select --'" :style="selected ? 'color:#1F2A1F;' : 'color:#9a9a8c;'"></span>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B5E20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" :style="open ? 'transform:rotate(180deg);' : ''" style="transition:transform .15s; flex-shrink:0;">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                            <div x-show="open" x-cloak class="auth-custom-select-list">
+                                <div class="auth-custom-select-option" :class="{ 'is-selected': selected === '' }" @click="selected = ''; open = false" style="color:#9a9a8c;">-- Select --</div>
+                                <div class="auth-custom-select-option" :class="{ 'is-selected': selected === 'Male' }" @click="selected = 'Male'; open = false">Male</div>
+                                <div class="auth-custom-select-option" :class="{ 'is-selected': selected === 'Female' }" @click="selected = 'Female'; open = false">Female</div>
+                            </div>
                             <x-input-error :messages="$errors->get('sex')" class="mt-2" />
                         </div>
                         <div>

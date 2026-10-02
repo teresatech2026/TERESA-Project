@@ -232,11 +232,32 @@
         [x-cloak]{display:none !important;}
         .auth-field{margin-bottom:16px; text-align:left;}
         .auth-field label{display:block; font-size:13px; font-weight:600; color:var(--soil); margin-bottom:6px;}
-        .auth-field input[type=text], .auth-field input[type=email], .auth-field input[type=password]{
+                .auth-field input[type=text], .auth-field input[type=email], .auth-field input[type=password]{
             width:100%; padding:10px 12px; border:1.5px solid var(--line); border-radius:8px;
             font-size:14px; font-family:inherit; color:var(--ink);
         }
         .auth-field input:focus{outline:none; border-color:var(--emerald);}
+        .auth-field select{
+            width:100%; padding:10px 36px 10px 12px; border:1.5px solid var(--line); border-radius:8px;
+            font-size:14px; font-family:inherit; color:var(--ink); background:#fff;
+            appearance:none; -webkit-appearance:none; -moz-appearance:none;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%231B5E20' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat:no-repeat;
+            background-position:right 10px center;
+            background-size:18px;
+            cursor:pointer;
+        }
+        .auth-field select:focus{outline:none; border-color:var(--emerald);}
+                .auth-field select:focus{outline:none; border-color:var(--emerald);}
+        .auth-field select option{
+            color:var(--ink);
+            background:#fff;
+        }
+        .auth-field select option:checked,
+        .auth-field select option:hover{
+            background-color:var(--emerald) !important;
+            color:#fff !important;
+        }
         .auth-error{color:#b3261e; font-size:12.5px; margin-top:4px;}
         .auth-pass-wrap{position:relative;}
         .auth-pass-wrap input{padding-right:38px !important;}
@@ -246,6 +267,24 @@
         .auth-divider::before, .auth-divider::after{content:''; flex:1; height:1px; background:var(--line);}
         .auth-google-btn{display:flex; align-items:center; justify-content:center; gap:10px; width:100%; padding:10px; border:1.5px solid var(--line); border-radius:8px; font-size:14px; font-weight:600; color:var(--soil); background:#fff; cursor:pointer;}
         .auth-google-btn:hover{background:var(--paper-dim);}
+               .auth-custom-select-btn{
+            width:100%; padding:10px 36px 10px 12px; border:1.5px solid var(--line); border-radius:8px;
+            font-size:14px; font-family:inherit; color:var(--ink); background:#fff;
+            display:flex; align-items:center; justify-content:space-between;
+            cursor:pointer; text-align:left;
+        }
+        .auth-custom-select-btn:hover{border-color:var(--emerald);}
+        .auth-custom-select-btn.is-open{border-color:var(--emerald);}
+        .auth-custom-select-list{
+            position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:50;
+            background:#fff; border:1.5px solid var(--line); border-radius:8px;
+            max-height:220px; overflow-y:auto; box-shadow:0 10px 30px -10px rgba(18,63,21,0.3);
+        }
+        .auth-custom-select-option{
+            padding:9px 12px; font-size:13.5px; color:var(--ink); cursor:pointer;
+        }
+        .auth-custom-select-option:hover{background:var(--emerald); color:#fff;}
+        .auth-custom-select-option.is-selected{background:var(--paper-dim); font-weight:600; color:var(--emerald-dark);}
         .auth-remember{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-soft); margin-bottom:16px; text-align:left;}
     </style>
 </head>
@@ -476,8 +515,8 @@
         </div>
     </div>
 </footer>
-    <div x-show="authModalOpen" x-cloak
-                  style="position:fixed; inset:0; z-index:100; display:grid; place-items:center; padding:20px;">>
+        <div x-show="authModalOpen" x-cloak
+                  style="position:fixed; inset:0; z-index:100; display:grid; place-items:center; padding:20px;">
 
         <div @click="authModalOpen = false"
              style="position:absolute; inset:0; background:rgba(18,63,21,0.45); backdrop-filter:blur(6px);">
