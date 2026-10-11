@@ -11,6 +11,13 @@
 
                 <form method="POST" action="{{ route('orders.store') }}">
                     @csrf
+ 
+                    @if ($isSelecting)
+                        <input type="hidden" name="selecting" value="1">
+                        @foreach ($cartItems as $item)
+                            <input type="hidden" name="items[]" value="{{ $item->id }}">
+                        @endforeach
+                    @endif
 
                     @foreach ($groupedByFarmer as $farmerId => $items)
                         <div class="border rounded-lg p-4 mb-6">
