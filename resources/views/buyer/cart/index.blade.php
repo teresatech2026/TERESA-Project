@@ -14,18 +14,40 @@
                 </div>
             @endif
 
+            @if (session('error'))
+                <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                 @if ($cartItems->isEmpty())
                     <p class="text-gray-500">Your cart is empty.
                         <a href="{{ route('marketplace.index') }}" class="text-primary-600 hover:underline">Browse the marketplace</a>
                     </p>
                 @else
+                    {{-- Checkout form: the checkboxes below are linked to it with form="checkout-form" --}}
+                    <form id="checkout-form" method="GET" action="{{ route('checkout') }}">
+                        <input type="hidden" name="selecting" value="1">
+                    </form>
+
+                    {{-- Select all --}}
+                    <label class="flex items-center gap-3 pb-3 border-b cursor-pointer select-none">
+                        <input type="checkbox" id="select-all" checked
+                               class="h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                        <span class="text-sm font-medium text-gray-700">Select all</span>
+                    </label>
+
                     <div class="divide-y">
                         @foreach ($cartItems as $item)
                             <div class="py-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
 
-                                {{-- Image + product info --}}
-                                <div class="flex items-center gap-4 flex-1 min-w-0">
+                                {{-- Checkbox + image + product info --}}
+                                <div class="flex items-center gap-3 flex-1 min-w-0">
+                                    <input type="checkbox" name="items[]" value="{{ $item->id }}" form="checkout-form" checked
+                                           data-amount="{{ $item->quantity * $item->product->selling_price }}"
+                                           class="item-checkbox h-5 w-5 flex-shrink-0 rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+
                                     @if ($item->product->primaryImage)
                                         <img src="{{ Storage::disk('supabase')->url($item->product->primaryImage->image_path) }}"
                                              class="w-20 h-20 object-cover rounded flex-shrink-0">
@@ -72,14 +94,53 @@
                         @endforeach
                     </div>
 
-                    <div class="mt-6 flex justify-between items-center border-t pt-4">
-                        <p class="text-lg font-semibold">Total: ₱{{ number_format($total, 2) }}</p>
-                        <a href="{{ route('checkout') }}" class="bg-accent-500 hover:bg-accent-600 text-gray-900 font-semibold px-6 py-2 rounded-md">
+                    <div class="mt-6 flex justify-between items-center border-t pt-4 gap-3">
+                        <div>
+                            <p class="text-xs text-gray-500"><span id="selected-count">0</span> selected</p>
+                            <p class="text-lg font-semibold">Total: <span id="selected-total">₱0.00</span></p>
+                        </div>
+                        <button type="submit" form="checkout-form" id="checkout-btn"
+                                class="bg-accent-500 hover:bg-accent-600 text-gray-900 font-semibold px-6 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed">
                             Checkout
-                        </a>
+                        </button>
                     </div>
                 @endif
             </div>
         </div>
     </div>
+
+    <script>
+        (function () {
+            const selectAll = document.getElementById('select-all');
+            const boxes = Array.from(document.querySelectorAll('.item-checkbox'));
+            const countEl = document.getElementById('selected-count');
+            const totalEl = document.getElementById('selected-total');
+            const checkoutBtn = document.getElementById('checkout-btn');
+
+            if (!selectAll || boxes.length === 0) return;
+
+            function refresh() {
+                const checked = boxes.filter(b => b.checked);
+                const total = checked.reduce((sum, b) => sum + parseFloat(b.dataset.amount), 0);
+
+                countEl.textContent = checked.length;
+                totalEl.textContent = '₱' + total.toLocaleString('en-PH', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+
+                checkoutBtn.disabled = checked.length === 0;
+                selectAll.checked = checked.length === boxes.length;
+                selectAll.indeterminate = checked.length > 0 && checked.length < boxes.length;
+            }
+
+            selectAll.addEventListener('change', function () {
+                boxes.forEach(b => b.checked = selectAll.checked);
+                refresh();
+            });
+
+            boxes.forEach(b => b.addEventListener('change', refresh));
+            refresh();
+        })();
+    </script>
 </x-app-layout>
