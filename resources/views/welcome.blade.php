@@ -226,6 +226,15 @@
             nav.auth-links{gap:12px;}
             .trust-line{gap:16px;}
         }
+                @media (max-width:600px){
+            .header-inner{padding:10px 14px; gap:10px;}
+            .brand{gap:8px; font-size:17px; min-width:0;}
+            .brand img{width:48px !important; height:48px !important; flex-shrink:0;}
+            .brand small{font-size:9px; letter-spacing:0.02em; line-height:1.25;}
+            nav.auth-links{gap:10px; flex-shrink:0;}
+            nav.auth-links a{font-size:13px; white-space:nowrap;}
+            .btn-register{padding:7px 12px; font-size:13px;}
+        }
         :focus-visible{outline:2.5px solid var(--gold-dark); outline-offset:2px;}
 
         /* ---------- Auth modal ---------- */
