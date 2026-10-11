@@ -11,22 +11,29 @@ use Illuminate\Support\Facades\DB;
 class MarketAnalyticsController extends Controller
 {
     /**
+     * SQL that turns a commodity name into one grouping key:
+     * ignores capital letters and extra spaces, and treats a plain trailing "s" as a plural
+     * (Vegetables = Vegetable, Fruit = fruit). Words ending in "ss" or "us" are left alone.
+     */
+    private const COMMODITY_KEY = "CASE WHEN LOWER(TRIM(products.commodity_type)) ~ '[^su]s\$' THEN LEFT(LOWER(TRIM(products.commodity_type)), -1) ELSE LOWER(TRIM(products.commodity_type)) END";
+
+    /**
      * Show the combined Market Analytics + Advisories page (read-only for everyone).
      */
     public function index()
     {
         // Most ordered commodities (by total quantity sold across all completed order items)
-        $mostOrdered = OrderItem::select(DB::raw('LOWER(TRIM(products.commodity_type)) as commodity_type'), DB::raw('SUM(order_items.quantity) as total_quantity'))
+        $mostOrdered = OrderItem::select(DB::raw(self::COMMODITY_KEY . ' as commodity_type'), DB::raw('SUM(order_items.quantity) as total_quantity'))
             ->join('products', 'products.id', '=', 'order_items.product_id')
-            ->groupBy(DB::raw('LOWER(TRIM(products.commodity_type))'))
+            ->groupBy(DB::raw(self::COMMODITY_KEY))
             ->orderByDesc('total_quantity')
             ->limit(5)
             ->get();
 
         // High demand: commodities with the most orders placed (order count, not quantity)
-        $highDemand = OrderItem::select(DB::raw('LOWER(TRIM(products.commodity_type)) as commodity_type'), DB::raw('COUNT(DISTINCT order_items.order_id) as order_count'))
+        $highDemand = OrderItem::select(DB::raw(self::COMMODITY_KEY . ' as commodity_type'), DB::raw('COUNT(DISTINCT order_items.order_id) as order_count'))
             ->join('products', 'products.id', '=', 'order_items.product_id')
-            ->groupBy(DB::raw('LOWER(TRIM(products.commodity_type))'))
+            ->groupBy(DB::raw(self::COMMODITY_KEY))
             ->orderByDesc('order_count')
             ->limit(5)
             ->get();
@@ -119,7 +126,7 @@ class MarketAnalyticsController extends Controller
 
             // 3. Top commodity in the latest full month
             $top = $this->topCommodityFor($last['month']);
-           $leader = $top ? " The most ordered commodity that month was " . ucfirst($top->commodity_type) . " ({$this->fmt((float) $top->qty)} units)." : '';
+            $leader = $top ? " The most ordered commodity that month was " . ucfirst($top->commodity_type) . " ({$this->fmt((float) $top->qty)} units)." : '';
 
             $insights[] = "In {$last['label']}, demand {$change}.{$leader}";
 
@@ -153,13 +160,13 @@ class MarketAnalyticsController extends Controller
     /**
      * The commodity with the highest total quantity ordered in a given month (YYYY-MM).
      */
-       private function topCommodityFor(string $month)
+    private function topCommodityFor(string $month)
     {
-        return OrderItem::select(DB::raw('LOWER(TRIM(products.commodity_type)) as commodity_type'), DB::raw('SUM(order_items.quantity) as qty'))
+        return OrderItem::select(DB::raw(self::COMMODITY_KEY . ' as commodity_type'), DB::raw('SUM(order_items.quantity) as qty'))
             ->join('products', 'products.id', '=', 'order_items.product_id')
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
             ->whereRaw("TO_CHAR(orders.created_at, 'YYYY-MM') = ?", [$month])
-            ->groupBy(DB::raw('LOWER(TRIM(products.commodity_type))'))
+            ->groupBy(DB::raw(self::COMMODITY_KEY))
             ->orderByDesc('qty')
             ->first();
     }
