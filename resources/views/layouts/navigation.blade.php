@@ -7,6 +7,9 @@
                 @auth
                 <div class="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex">
                    @if (auth()->user()->role === 'farmer')
+                    <x-nav-link :href="route('farmer.marketplace.index')" :active="request()->routeIs('farmer.marketplace.*')">
+                        {{ __('Marketplace') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('farmer.products.index')" :active="request()->routeIs('farmer.products.*')">
                         {{ __('My Products') }}
                     </x-nav-link>
@@ -166,6 +169,9 @@
     <div class="pt-2 pb-3 space-y-1">
         @auth
         @if (auth()->user()->role === 'farmer')
+            <x-responsive-nav-link :href="route('farmer.marketplace.index')" :active="request()->routeIs('farmer.marketplace.*')">
+                {{ __('Marketplace') }}
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('farmer.products.index')" :active="request()->routeIs('farmer.products.*')">
                 {{ __('My Products') }}
             </x-responsive-nav-link>

@@ -23,6 +23,14 @@ Route::get('/farmer/dashboard', function () {
     return view('farmer.dashboard');
 })->middleware(['auth', 'role:farmer'])->name('farmer.dashboard');
 
+Route::get('/farmer/marketplace', [\App\Http\Controllers\Farmer\MarketplaceController::class, 'index'])
+    ->middleware(['auth', 'role:farmer'])
+    ->name('farmer.marketplace.index');
+
+Route::get('/farmer/marketplace/{product}', [\App\Http\Controllers\Farmer\MarketplaceController::class, 'show'])
+    ->middleware(['auth', 'role:farmer'])
+    ->name('farmer.marketplace.show');
+
 Route::get('/farmer/products', [\App\Http\Controllers\Farmer\ProductController::class, 'index'])
     ->middleware(['auth', 'role:farmer'])
     ->name('farmer.products.index');
