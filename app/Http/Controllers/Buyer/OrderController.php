@@ -13,24 +13,35 @@ class OrderController extends Controller
     /**
      * Show the checkout review page (grouped by farmer).
      */
-    public function checkout()
+    public function checkout(Request $request)
     {
         $buyer = auth()->user()->buyer;
 
-        $cartItems = $buyer->cartItems()->with(['product.farmer'])->get();
+        $query = $buyer->cartItems()->with(['product.farmer']);
+
+        // When coming from the cart's checklist, only use the selected items
+        $isSelecting = $request->boolean('selecting');
+        if ($isSelecting) {
+            $query->whereIn('id', (array) $request->input('items', []));
+        }
+
+        $cartItems = $query->get();
 
         if ($cartItems->isEmpty()) {
-            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+            return redirect()->route('cart.index')->with(
+                'error',
+                $isSelecting ? 'Please select at least one item to check out.' : 'Your cart is empty.'
+            );
         }
 
         // Group cart items by farmer, since each farmer becomes a separate order
         $groupedByFarmer = $cartItems->groupBy(fn ($item) => $item->product->farmer_id);
 
-        return view('buyer.orders.checkout', compact('groupedByFarmer'));
+        return view('buyer.orders.checkout', compact('groupedByFarmer', 'cartItems', 'isSelecting'));
     }
 
     /**
-     * Place the order(s) — one order per farmer represented in the cart.
+     * Place the order(s) — one order per farmer represented in the selected cart items.
      */
     public function store(Request $request)
     {
@@ -40,15 +51,26 @@ class OrderController extends Controller
         ]);
 
         $buyer = auth()->user()->buyer;
-        $cartItems = $buyer->cartItems()->with('product')->get();
+
+        $query = $buyer->cartItems()->with('product');
+
+        $isSelecting = $request->boolean('selecting');
+        if ($isSelecting) {
+            $query->whereIn('id', (array) $request->input('items', []));
+        }
+
+        $cartItems = $query->get();
 
         if ($cartItems->isEmpty()) {
-            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+            return redirect()->route('cart.index')->with(
+                'error',
+                $isSelecting ? 'Please select at least one item to check out.' : 'Your cart is empty.'
+            );
         }
 
         $groupedByFarmer = $cartItems->groupBy(fn ($item) => $item->product->farmer_id);
 
-        DB::transaction(function () use ($groupedByFarmer, $buyer, $request) {
+        DB::transaction(function () use ($groupedByFarmer, $buyer, $request, $cartItems) {
             foreach ($groupedByFarmer as $farmerId => $items) {
                 $orderTotal = $items->sum(fn ($item) => $item->quantity * $item->product->selling_price);
 
@@ -80,12 +102,12 @@ class OrderController extends Controller
                     ]);
 
                     // Reduce available stock
-                  $item->product->decrementStock($item->quantity);
+                    $item->product->decrementStock($item->quantity);
                 }
             }
 
-            // Clear the cart now that orders are placed
-            $buyer->cartItems()->delete();
+            // Remove only the items that were just ordered; unchecked ones stay in the cart
+            $buyer->cartItems()->whereIn('id', $cartItems->pluck('id'))->delete();
         });
 
         return redirect()->route('orders.index')->with('success', 'Order placed successfully!');
