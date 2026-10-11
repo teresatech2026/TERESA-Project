@@ -60,7 +60,7 @@
                     <h3 class="font-semibold text-lg mb-4">High Demand Commodities</h3>
                     @forelse ($highDemand as $item)
                         <div class="flex justify-between text-sm py-2 border-b last:border-0">
-                            <span>{{ $item->commodity_type }}</span>
+                            <span>{{ ucfirst($item->commodity_type) }}</span>
                             <span class="text-gray-500">{{ $item->order_count }} orders</span>
                         </div>
                     @empty
@@ -180,7 +180,7 @@
             new Chart(document.getElementById('mostOrderedChart'), {
                 type: 'bar',
                 data: {
-                    labels: {!! json_encode($mostOrdered->pluck('commodity_type')) !!},
+                    labels: {!! json_encode($mostOrdered->pluck('commodity_type')->map(fn ($c) => ucfirst($c))->values()) !!},
                     datasets: [{
                         label: 'Units Sold',
                         data: {!! json_encode($mostOrdered->pluck('total_quantity')) !!},
