@@ -16,7 +16,8 @@ class MarketplaceController extends Controller
     $search = $request->query('search');
 
     $products = Product::with(['images', 'farmer'])
-        ->where('status', 'active')
+                ->where('status', 'active')
+        ->notExpired()
         ->when($search, function ($query, $search) {
             $query->where(function ($q) use ($search) {
                 $q->where('product_name', 'ilike', "%{$search}%")
@@ -36,9 +37,15 @@ class MarketplaceController extends Controller
      */
     public function show(Product $product)
     {
-        abort_unless($product->status === 'active', 404);
+                abort_unless($product->status === 'active' && ! $this->isExpired($product), 404);
         $product->load(['images', 'farmer']);
 
         return view('buyer.marketplace.show', compact('product'));
+    }
+        private function isExpired(Product $product): bool
+    {
+        return $product->estimated_shelf_life_days
+            && $product->harvest_date
+            && $product->harvest_date->copy()->addDays($product->estimated_shelf_life_days)->isPast();
     }
 }
