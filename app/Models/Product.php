@@ -23,6 +23,22 @@ class Product extends Model
     public function orderItems() { return $this->hasMany(OrderItem::class); }
     public function bids() { return $this->hasMany(Bid::class); }
 
+        /**
+     * Only products that have NOT passed their shelf life.
+     * Products with no shelf life or harvest date set never expire.
+     */
+    public function scopeNotExpired($query)
+    {
+        return $query->where(function ($q) {
+            $q->whereNull('estimated_shelf_life_days')
+              ->orWhereNull('harvest_date')
+              ->orWhereRaw(
+                  "harvest_date + (estimated_shelf_life_days * INTERVAL '1 day') > ?",
+                  [now()]
+              );
+        });
+    }
+
     // Freshness Status is computed, not stored.
     public function getFreshnessStatusAttribute(): string
     {
